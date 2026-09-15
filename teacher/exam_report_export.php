@@ -1,0 +1,7 @@
+<?php
+require_once __DIR__.'/../lib/bootstrap.php'; require_role('teacher','admin');
+$uid=(int)current_user()['id'];$eid=get_int('exam_id');$owner=current_user()['role']==='admin'?'':' AND e.created_by=?';$params=current_user()['role']==='admin'?[$eid]:[$eid,$uid];
+$s=db()->prepare("SELECT e.*,s.title subject_title,c.title class_title FROM exams e JOIN subjects s ON s.id=e.subject_id JOIN classes c ON c.id=e.class_id WHERE e.id=?$owner");$s->execute($params);$exam=$s->fetch();if(!$exam)exit('گزارش پیدا نشد یا دسترسی ندارید.');
+$s=db()->prepare('SELECT a.*,u.full_name,u.mobile FROM attempts a JOIN users u ON u.id=a.student_id WHERE a.exam_id=? ORDER BY a.score DESC,u.full_name');$s->execute([$eid]);$attempts=$s->fetchAll();
+function xls_cell($value){return '"'.str_replace('"','""',(string)$value).'"';}
+$filename='exam_report_'.$eid.'_'.date('Ymd_His').'.xls';header('Content-Type: application/vnd.ms-excel; charset=UTF-8');header('Content-Disposition: attachment; filename="'.$filename.'"');echo "\xEF\xBB\xBF";echo xls_cell('گزارش آزمون')."\t".xls_cell($exam['title'])."\n";echo xls_cell('درس')."\t".xls_cell($exam['subject_title'])."\n";echo xls_cell('کلاس')."\t".xls_cell($exam['class_title'])."\n\n";echo implode("\t",array_map('xls_cell',['ردیف','نام دانش‌آموز','شماره موبایل','نمره','نمره کل','درصد','وضعیت']))."\n";foreach($attempts as $i=>$a){echo implode("\t",array_map('xls_cell',[$i+1,$a['full_name'],$a['mobile'],$a['score']??0,$exam['total_score'],$a['percentage']??0,$a['status']]))."\n";}exit;
