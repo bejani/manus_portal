@@ -58,6 +58,7 @@ CREATE TABLE class_subjects (
 CREATE TABLE exams (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   subject_id INT UNSIGNED NOT NULL,
+  chapter VARCHAR(150) NULL,
   class_id INT UNSIGNED NOT NULL,
   title VARCHAR(200) NOT NULL,
   instructions TEXT NULL,
@@ -69,6 +70,7 @@ CREATE TABLE exams (
   created_by INT UNSIGNED NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_exams_class_subject (class_id, subject_id),
+  INDEX idx_exams_subject_chapter (subject_id, chapter),
   INDEX idx_exams_status (status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
