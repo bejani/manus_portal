@@ -34,3 +34,5 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 
 /* Hard override for the admin existing-questions frame. */
 .bank-shell.existing-bank-shell,.bank-shell.existing-bank-shell>.bank-list-card,.bank-shell.existing-bank-shell>#bank-list{display:block!important;width:100%!important;max-width:none!important;margin-inline:0!important;grid-column:1/-1!important}.bank-shell.existing-bank-shell .table-wrap{width:100%!important;max-width:none!important}
+/* Full-width admin add/edit question layout. */
+.bank-shell.admin-edit-shell{display:block!important;width:100%!important}.bank-shell.admin-edit-shell>.bank-forms{display:block!important;width:100%!important;max-width:none!important}.bank-shell.admin-edit-shell>.bank-forms>.card{width:100%!important;max-width:none!important;box-sizing:border-box}
