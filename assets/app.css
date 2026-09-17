@@ -31,3 +31,6 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .bank-shell:has(#bank-list){grid-template-columns:1fr}.bank-shell:has(#bank-list) .bank-list-card{position:static}.bank-shell:has(#bank-list) .bank-list-card .table-wrap{max-height:none;overflow-x:auto;overflow-y:visible}
 /* Keep the existing-question view full width, including its parent shell. */
 .bank-shell.existing-bank-shell{display:block;width:100%;}.bank-shell.existing-bank-shell .bank-list-card{width:100%;max-width:none;}.bank-shell.existing-bank-shell #bank-list{width:100%;}
+
+/* Hard override for the admin existing-questions frame. */
+.bank-shell.existing-bank-shell,.bank-shell.existing-bank-shell>.bank-list-card,.bank-shell.existing-bank-shell>#bank-list{display:block!important;width:100%!important;max-width:none!important;margin-inline:0!important;grid-column:1/-1!important}.bank-shell.existing-bank-shell .table-wrap{width:100%!important;max-width:none!important}
