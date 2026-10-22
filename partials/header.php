@@ -3,13 +3,13 @@ require_once __DIR__ . '/../lib/bootstrap.php';
 $title = $title ?? $config['app']['name'];
 $currentPage = basename($_SERVER['SCRIPT_NAME'] ?? '');
 $adminNav = [
-    ['admin/index.php', 'داشبورد'],
-    ['admin/users.php', 'کاربران'],
-    ['admin/classes.php', 'کلاس‌ها'],
-    ['admin/subjects.php', 'درس‌ها'],
-    ['admin/exams.php', 'آزمون‌ها'],
-    ['admin/question_bank.php', 'بانک سؤال'],
-    ['admin/analytics.php', 'گزارش‌ها'],
+    ['admin/index.php', '⌂', 'داشبورد'],
+    ['admin/users.php', '♙', 'کاربران'],
+    ['admin/classes.php', '▦', 'کلاس‌ها'],
+    ['admin/subjects.php', '◫', 'درس‌ها'],
+    ['admin/exams.php', '✎', 'آزمون‌ها'],
+    ['admin/question_bank.php', '?', 'بانک سؤال'],
+    ['admin/analytics.php', '▥', 'گزارش‌ها'],
 ];
 ?>
 <!doctype html>
@@ -38,12 +38,12 @@ $adminNav = [
             <div class="container admin-nav-inner">
                 <span class="admin-nav-label">مدیریت سامانه</span>
                 <div class="admin-nav-links">
-                    <?php foreach ($adminNav as [$path, $label]): ?>
+                    <?php foreach ($adminNav as [$path, $icon, $label]): ?>
                         <?php $isActive = $currentPage === basename($path); ?>
-                        <a class="admin-nav-link<?= $isActive ? ' is-active' : '' ?>" href="<?= e(url($path)) ?>"<?= $isActive ? ' aria-current="page"' : '' ?>><?= e($label) ?></a>
+                        <a class="admin-nav-link<?= $isActive ? ' is-active' : '' ?>" href="<?= e(url($path)) ?>"<?= $isActive ? ' aria-current="page"' : '' ?>><span class="admin-nav-icon" aria-hidden="true"><?= e($icon) ?></span><span><?= e($label) ?></span></a>
                     <?php endforeach; ?>
                 </div>
-                <a class="admin-nav-more" href="<?= e(url('admin/audit_logs.php')) ?>">امنیت و پشتیبان‌گیری</a>
+                <a class="admin-nav-more" href="<?= e(url('admin/audit_logs.php')) ?>"><span class="admin-nav-icon" aria-hidden="true">⚙</span><span>امنیت و پشتیبان‌گیری</span></a>
             </div>
         </nav>
     <?php endif; ?>
