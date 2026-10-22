@@ -139,3 +139,11 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .teacher-action-subjects{background:linear-gradient(135deg,#047857,#10b981)}.teacher-action-exams{background:linear-gradient(135deg,#c2410c,#f97316)}.teacher-action-bank{background:linear-gradient(135deg,#be185d,#ec4899)}.teacher-action-feedback{background:linear-gradient(135deg,#3730a3,#6366f1)}
 .teacher-action-subjects .action-icon:before{content:"◫";color:#047857}.teacher-action-exams .action-icon:before{content:"✎";color:#c2410c}.teacher-action-bank .action-icon:before{content:"?";color:#be185d}.teacher-action-feedback .action-icon:before{content:"♥";color:#3730a3}
 @media(max-width:950px){.teacher-actions{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:620px){.role-stat-card{min-height:112px;padding:16px}.role-stat-card strong{font-size:1.8rem}.teacher-actions{grid-template-columns:1fr}.teacher-action-card{min-height:160px}}
+
+/* کارت‌های آمار معلم کمی جمع‌وجورتر از کارت‌های عملیات */
+.role-stat-grid{gap:12px;margin-bottom:26px}
+.role-stat-card{min-height:108px;padding:14px 16px;border-radius:16px}
+.role-stat-card .teacher-stat-icon{width:37px;height:37px;margin-bottom:5px;border-radius:12px;font-size:1.18rem}
+.role-stat-card strong{margin:3px 0 0;font-size:1.75rem}
+.role-stat-card small{font-size:.76rem}
+@media(max-width:620px){.role-stat-card{min-height:98px;padding:13px 14px}.role-stat-card .teacher-stat-icon{width:34px;height:34px;font-size:1.05rem}.role-stat-card strong{font-size:1.55rem}}
