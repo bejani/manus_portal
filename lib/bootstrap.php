@@ -85,6 +85,27 @@ function normalize_mobile(string $mobile): string { $mobile = strtr($mobile, ['Û
 function get_int(string $key): int { return max(0, (int)($_GET[$key] ?? 0)); }
 function format_score($score): string { return number_format((float)$score, 2, '.', ''); }
 
+function teacher_can_use_subject(int $teacherId, int $subjectId): bool
+{
+    $stmt = db()->prepare("SELECT COUNT(*) FROM subjects s WHERE s.id=? AND s.is_active=1 AND (s.created_by=? OR EXISTS (SELECT 1 FROM class_subjects cs JOIN teacher_classes tc ON tc.class_id=cs.class_id WHERE cs.subject_id=s.id AND cs.teacher_id=? AND tc.teacher_id=?))");
+    $stmt->execute([$subjectId, $teacherId, $teacherId, $teacherId]);
+    return (int)$stmt->fetchColumn() > 0;
+}
+
+function teacher_can_use_subject_for_class(int $teacherId, int $subjectId, int $classId): bool
+{
+    $stmt = db()->prepare("SELECT COUNT(*) FROM subjects s JOIN teacher_classes tc ON tc.class_id=? AND tc.teacher_id=? WHERE s.id=? AND s.is_active=1 AND (s.created_by=? OR EXISTS (SELECT 1 FROM class_subjects cs WHERE cs.class_id=? AND cs.subject_id=s.id AND cs.teacher_id=?))");
+    $stmt->execute([$classId, $teacherId, $subjectId, $teacherId, $classId, $teacherId]);
+    return (int)$stmt->fetchColumn() > 0;
+}
+
+function teacher_can_access_bank_question(int $teacherId, int $bankQuestionId): bool
+{
+    $stmt = db()->prepare("SELECT COUNT(*) FROM question_bank qb JOIN subjects s ON s.id=qb.subject_id WHERE qb.id=? AND qb.is_active=1 AND (qb.owner_id=? OR s.created_by=? OR EXISTS (SELECT 1 FROM class_subjects cs JOIN teacher_classes tc ON tc.class_id=cs.class_id WHERE cs.subject_id=s.id AND cs.teacher_id=? AND tc.teacher_id=?))");
+    $stmt->execute([$bankQuestionId, $teacherId, $teacherId, $teacherId, $teacherId]);
+    return (int)$stmt->fetchColumn() > 0;
+}
+
 function local_grade_suggestion(string $answer, ?string $rubric, float $maxScore): array {
     $suggested = 0.0; $matched = []; $missing = [];
     $answerNorm = text_lower(trim($answer));
