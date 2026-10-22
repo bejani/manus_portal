@@ -196,3 +196,27 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .site-header .admin-nav-more{margin-right:auto;color:#475569!important;font-size:.78rem}
 .site-header .admin-nav-more .admin-nav-icon{color:#64748b}
 @media(max-width:760px){.site-header .admin-nav-inner{min-height:62px;padding-top:8px;padding-bottom:8px}.site-header .admin-nav-links{gap:7px;overflow-x:auto;padding:2px 2px 5px}.site-header .admin-nav-link{flex:0 0 auto;min-height:40px;padding:6px 10px;font-size:.76rem}.site-header .admin-nav-link .admin-nav-icon{width:24px;height:24px}.site-header .admin-nav-more{display:none}}
+
+
+/* ساختار جمع‌وجور و مرحله‌ای کارت کلاس */
+.class-card{padding:18px}
+.class-card-header{padding-bottom:12px}
+.class-card-header h2{font-size:1.12rem}
+.class-card-actions{margin-top:10px}
+.class-section{margin-top:10px;border:1px solid #e7eaf0;border-radius:14px;background:#fff;overflow:hidden}
+.class-section>summary{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 14px;cursor:pointer;list-style:none;color:#334155;font-size:.9rem;font-weight:800;transition:background .18s ease,color .18s ease}
+.class-section>summary::-webkit-details-marker{display:none}
+.class-section>summary:before{content:"＋";display:grid;place-items:center;flex:0 0 24px;width:24px;height:24px;border-radius:8px;background:#f1f5f9;color:#64748b;font-size:1rem;line-height:1;transition:transform .18s ease,background .18s ease,color .18s ease}
+.class-section[open]>summary{background:#faf7ff;color:#4c1d95;border-bottom:1px solid #ede9fe}
+.class-section[open]>summary:before{content:"−";background:#ede9fe;color:#6d28d9}
+.class-section>summary>span:first-of-type{flex:1}
+.section-count{padding:3px 9px;border-radius:999px;background:#f1f5f9;color:#64748b;font-size:.74rem;font-weight:800}
+.class-section[open] .section-count{background:#ede9fe;color:#6d28d9}
+.class-section .class-teachers,.class-section .class-subjects,.class-section .class-columns{padding:13px 14px 14px}
+.class-section .class-columns{padding-top:14px}
+.class-section h3{margin:0 0 9px;font-size:.92rem;color:#475569}
+.class-section .teacher-list{gap:6px}
+.class-section .teacher-chip{padding:7px 9px}
+.class-section .teacher-assign-form{margin-top:10px;gap:7px}
+.class-section .class-enroll{padding:12px}
+@media(max-width:760px){.class-card{padding:14px}.class-section>summary{padding:11px 12px}.class-section .class-columns{padding:12px}.section-count{font-size:.7rem}}
