@@ -89,3 +89,19 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .admin-stat-exams{background:linear-gradient(135deg,#312e81,#4338ca)!important}
 .admin-stat-attempts{background:linear-gradient(135deg,#3f3f46,#52525b)!important}
 .admin-stat-average{background:linear-gradient(135deg,#0f172a,#475569)!important}
+
+
+/* آیکون‌های داخلی کارت‌های مدیر */
+.admin-action-card{isolation:isolate}
+.admin-card-icon{position:relative;z-index:2;display:grid;place-items:center;width:43px;height:43px;border:1px solid rgba(255,255,255,.3);border-radius:14px;background:rgba(255,255,255,.16);color:#fff;font-size:1.45rem;font-weight:900;line-height:1;box-shadow:0 6px 14px rgba(15,23,42,.12)}
+.admin-card-icon:before{content:""}
+.action-users .admin-card-icon:before{content:"♙"}
+.action-classes .admin-card-icon:before{content:"▦"}
+.action-subjects .admin-card-icon:before{content:"◫"}
+.action-exams .admin-card-icon:before{content:"✎"}
+.action-question-bank .admin-card-icon:before{content:"?"}
+.action-reports .admin-card-icon:before{content:"▥"}
+.action-performance .admin-card-icon:before{content:"↗"}
+.action-audit .admin-card-icon:before{content:"◉"}
+.action-create .admin-card-icon:before{content:"＋"}
+.admin-stat-card:before{z-index:0}
