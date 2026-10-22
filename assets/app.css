@@ -64,3 +64,20 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .admin-action-card.action-audit{background:linear-gradient(135deg,#334155,#64748b)}
 .admin-action-card.action-create{background:linear-gradient(135deg,#15803d,#22c55e)}
 @media(max-width:620px){.admin-action-card{min-height:156px}.admin-action-card p{font-size:.76rem}}
+
+/* کارت‌های آماری رنگی داشبورد مدیر */
+.admin-stat-card{position:relative;overflow:hidden;border:0;color:#fff!important;box-shadow:0 12px 25px rgba(15,23,42,.12);transition:transform .18s ease,box-shadow .18s ease}
+.admin-stat-card:before{content:"";position:absolute;right:-25px;top:-34px;width:112px;height:112px;border:22px solid rgba(255,255,255,.12);border-radius:50%;pointer-events:none}
+.admin-stat-card:after{left:-26px;bottom:-42px;width:128px;height:128px;background:rgba(255,255,255,.15);opacity:1;pointer-events:none}
+.admin-stat-card:hover{transform:translateY(-4px);box-shadow:0 18px 32px rgba(15,23,42,.18)}
+.admin-stat-card .admin-stat-label,.admin-stat-card strong,.admin-stat-card span{position:relative;z-index:1;color:#fff!important}
+.admin-stat-card .admin-stat-label{font-size:.9rem;font-weight:800;opacity:.94}
+.admin-stat-card strong{margin:12px 0 5px;font-size:2.25rem;text-shadow:0 2px 3px rgba(15,23,42,.16)}
+.admin-stat-card span:last-child{font-size:.8rem;line-height:1.7;opacity:.86}
+.admin-stat-users{background:linear-gradient(135deg,#6d28d9,#9333ea);color:#fff}
+.admin-stat-classes{background:linear-gradient(135deg,#0369a1,#0891b2);color:#fff}
+.admin-stat-subjects{background:linear-gradient(135deg,#047857,#10b981);color:#fff}
+.admin-stat-exams{background:linear-gradient(135deg,#c2410c,#f97316);color:#fff}
+.admin-stat-attempts{background:linear-gradient(135deg,#be185d,#ec4899);color:#fff}
+.admin-stat-average{background:linear-gradient(135deg,#3730a3,#6366f1);color:#fff}
+@media(max-width:620px){.admin-stat-card{min-height:116px;padding:16px}.admin-stat-card strong{font-size:1.85rem}}
