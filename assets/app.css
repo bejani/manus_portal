@@ -111,3 +111,10 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .admin-card-icon:before{transform:rotate(3deg)}
 .admin-action-card:hover .admin-card-icon{transform:rotate(0deg) scale(1.08);box-shadow:0 10px 22px rgba(15,23,42,.28),inset 0 0 0 3px rgba(255,255,255,.38)}
 .action-users .admin-card-icon{color:#6d28d9}.action-classes .admin-card-icon{color:#0369a1}.action-subjects .admin-card-icon{color:#047857}.action-exams .admin-card-icon{color:#c2410c}.action-question-bank .admin-card-icon{color:#be185d}.action-reports .admin-card-icon{color:#3730a3}.action-performance .admin-card-icon{color:#075985}.action-audit .admin-card-icon{color:#334155}.action-create .admin-card-icon{color:#15803d}
+
+
+/* آیکون‌های کارت‌های آماری مدیر */
+.admin-stat-icon{position:relative;z-index:2;display:grid;place-items:center;width:43px;height:43px;border:2px solid rgba(255,255,255,.75);border-radius:14px;background:rgba(255,255,255,.93);color:#172033;font-size:1.35rem;font-weight:900;line-height:1;box-shadow:0 7px 16px rgba(15,23,42,.22);transform:rotate(-3deg);transition:transform .18s ease,box-shadow .18s ease}
+.admin-stat-icon:before{transform:rotate(3deg)}
+.admin-stat-card:hover .admin-stat-icon{transform:rotate(0deg) scale(1.08);box-shadow:0 10px 20px rgba(15,23,42,.28)}
+.admin-stat-users .admin-stat-icon:before{content:"♙";color:#1e3a8a}.admin-stat-classes .admin-stat-icon:before{content:"▦";color:#334155}.admin-stat-subjects .admin-stat-icon:before{content:"◫";color:#155e75}.admin-stat-exams .admin-stat-icon:before{content:"✎";color:#4338ca}.admin-stat-attempts .admin-stat-icon:before{content:"✓";color:#52525b}.admin-stat-average .admin-stat-icon:before{content:"↗";color:#0f172a}
