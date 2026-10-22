@@ -81,3 +81,11 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .admin-stat-attempts{background:linear-gradient(135deg,#be185d,#ec4899);color:#fff}
 .admin-stat-average{background:linear-gradient(135deg,#3730a3,#6366f1);color:#fff}
 @media(max-width:620px){.admin-stat-card{min-height:116px;padding:16px}.admin-stat-card strong{font-size:1.85rem}}
+
+/* پالت مستقل و حرفه‌ای برای کارت‌های آمار؛ جدا از کارت‌های رنگی عملیات */
+.admin-stat-users{background:linear-gradient(135deg,#172554,#1e3a8a)!important}
+.admin-stat-classes{background:linear-gradient(135deg,#1e293b,#334155)!important}
+.admin-stat-subjects{background:linear-gradient(135deg,#164e63,#155e75)!important}
+.admin-stat-exams{background:linear-gradient(135deg,#312e81,#4338ca)!important}
+.admin-stat-attempts{background:linear-gradient(135deg,#3f3f46,#52525b)!important}
+.admin-stat-average{background:linear-gradient(135deg,#0f172a,#475569)!important}
