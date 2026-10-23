@@ -29,6 +29,25 @@ function db(): PDO
 }
 
 function e(?string $value): string { return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
+
+function question_prompt_html(?string $value): string
+{
+    $text = trim((string)$value);
+    if ($text === '') return '';
+
+    // Programming questions often contain a Persian stem followed by code on the same line.
+    // Split only when the second part looks like code, so ordinary questions remain unchanged.
+    if (preg_match('/^(.+?[؟?])\s*(.+)$/us', $text, $matches)) {
+        $stem = trim($matches[1]);
+        $code = trim($matches[2]);
+        $looksLikeCode = preg_match('/(?:\bprint\s*\(|\bif\b|\belif\b|\belse\b|\bfor\b|\bwhile\b|\breturn\b|\bSELECT\b|\bFROM\b|=>|==|>=|<=|&&|\|\||[A-Za-z_][A-Za-z0-9_]*\s*=)/i', $code);
+        if ($looksLikeCode) {
+            return '<span class="question-stem">'.e($stem).'</span><code class="question-code">'.e($code).'</code>';
+        }
+    }
+
+    return '<span class="question-stem">'.e($text).'</span>';
+}
 function text_substr(string $value, int $start, ?int $length = null): string
 {
     if (function_exists('mb_substr')) return $length === null ? mb_substr($value, $start, null, 'UTF-8') : mb_substr($value, $start, $length, 'UTF-8');
