@@ -30,6 +30,19 @@ function db(): PDO
 
 function e(?string $value): string { return htmlspecialchars($value ?? '', ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8'); }
 
+function question_editor_value(?string $value): string
+{
+    $text = trim((string)$value);
+    if ($text === '' || preg_match('/\r?\n/', $text)) return $text;
+    if (preg_match('/^(.+?[؟?])\s*(.+)$/us', $text, $matches)) {
+        $code = trim($matches[2]);
+        if (preg_match('/(?:\bprint\s*\(|\bif\b|\belif\b|\belse\b|\bfor\b|\bwhile\b|\breturn\b|=>|==|>=|<=|&&|\|\||[A-Za-z_][A-Za-z0-9_]*\s*=)/i', $code)) {
+            return trim($matches[1])."\n".$code;
+        }
+    }
+    return $text;
+}
+
 function question_prompt_html(?string $value): string
 {
     $text = trim((string)$value);
