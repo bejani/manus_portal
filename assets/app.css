@@ -244,3 +244,9 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .student-picker-search:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.14);outline:0}
 .student-picker-hint{display:block;margin:7px 0 10px;color:#64748b;line-height:1.8}
 .class-enroll select[data-student-select]{width:100%;min-height:44px}
+
+.student-picker-select{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important}
+.student-picker-results{display:grid;gap:6px;margin-top:8px;max-height:260px;overflow:auto}
+.student-picker-result{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:9px 11px;border:1px solid #ddd6fe;border-radius:10px;background:#faf5ff;color:#312e81;text-align:right;cursor:pointer}
+.student-picker-result:hover,.student-picker-result:focus{background:#ede9fe;border-color:#8b5cf6;outline:0}
+.student-picker-result small{color:#64748b;direction:ltr}
