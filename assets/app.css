@@ -296,3 +296,17 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 #admin-import-short .exam-builder-summary{background:linear-gradient(135deg,#fff7ed,#ffedd5);color:#9a3412}
 #admin-import-short .exam-builder-summary>b{background:#ea580c}
 #admin-import-short[open] .exam-builder-summary{background:linear-gradient(135deg,#ffedd5,#fed7aa);border-bottom-color:#fed7aa}
+
+/* Collapsible class creation/edit form. */
+.class-form-card{padding:0;overflow:hidden;border-color:#c4b5fd;box-shadow:0 10px 26px rgba(109,40,217,.09)}
+.class-form-summary{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;cursor:pointer;list-style:none;background:linear-gradient(135deg,#faf5ff,#ede9fe);color:#5b21b6}
+.class-form-summary::-webkit-details-marker{display:none}
+.class-form-summary>span{display:flex;flex-direction:column;gap:4px}
+.class-form-summary strong{font-size:1.05rem}
+.class-form-summary small{color:#64748b;font-weight:400}
+.class-form-summary>b{padding:8px 13px;border-radius:10px;background:#7c3aed;color:#fff;font-size:.82rem;white-space:nowrap}
+.class-form-card[open] .class-form-summary{background:linear-gradient(135deg,#f3e8ff,#ddd6fe);border-bottom:1px solid #ddd6fe}
+.class-form-card[open] .class-form-summary>b{background:#6d28d9}
+.class-form-content{padding:22px}
+.class-form-content form{margin:0}
+@media(max-width:620px){.class-form-summary{align-items:flex-start;flex-direction:column;padding:16px}.class-form-summary>b{width:100%;box-sizing:border-box;text-align:center}.class-form-content{padding:16px}}
