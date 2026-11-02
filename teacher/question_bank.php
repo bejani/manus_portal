@@ -25,7 +25,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
   redirect('teacher/question_bank.php'.($examId?'?exam_id='.$examId:''));
  }
  if($action==='import_mcq_docx'){
-  $subjectId=(int)($_POST['subject_id']??0);if(!$isAdmin&&!teacher_can_use_subject($uid,$subjectId)){$errors[]='درس انتخابی برای شما اختصاص داده نشده است.';}$score=(float)($_POST['score']??1);
+  $subjectId=(int)($_POST['subject_id']??0);$chapter=post_string('chapter',150);if(!$isAdmin&&!teacher_can_use_subject($uid,$subjectId)){$errors[]='درس انتخابی برای شما اختصاص داده نشده است.';}$score=(float)($_POST['score']??1);
   if(!isset($_FILES['mcq_file'])||$_FILES['mcq_file']['error']!==UPLOAD_ERR_OK)$errors[]='لطفاً فایل DOCX را انتخاب کنید.';
   elseif(strtolower(pathinfo($_FILES['mcq_file']['name'],PATHINFO_EXTENSION))!=='docx')$errors[]='فقط فایل DOCX پذیرفته می‌شود.';
   elseif($_FILES['mcq_file']['size']>5*1024*1024)$errors[]='حجم فایل نباید بیشتر از ۵ مگابایت باشد.';
