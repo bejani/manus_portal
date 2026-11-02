@@ -278,3 +278,21 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .admin-bank-panel-content>h2{margin-top:0;color:#4c1d95}
 .admin-bank-panel-content>form{margin:0}
 @media(max-width:620px){.admin-bank-panel-content{padding:15px}}
+
+/* Distinct visual tones for admin question-bank panels. */
+.admin-edit-shell .admin-bank-panel:first-child{border-color:#ddd0f7;box-shadow:0 10px 26px rgba(91,33,182,.10)}
+.admin-edit-shell .admin-bank-panel:first-child .exam-builder-summary{background:linear-gradient(135deg,#faf5ff,#ede9fe);color:#5b21b6}
+.admin-edit-shell .admin-bank-panel:first-child .exam-builder-summary>b{background:#7c3aed}
+.admin-edit-shell .admin-bank-panel:first-child[open] .exam-builder-summary{background:linear-gradient(135deg,#f3e8ff,#ddd6fe);border-bottom-color:#ddd6fe}
+#admin-import-mcq{border-color:#bae6fd;box-shadow:0 10px 26px rgba(2,132,199,.10)}
+#admin-import-mcq .exam-builder-summary{background:linear-gradient(135deg,#ecfeff,#e0f2fe);color:#075985}
+#admin-import-mcq .exam-builder-summary>b{background:#0284c7}
+#admin-import-mcq[open] .exam-builder-summary{background:linear-gradient(135deg,#cffafe,#bae6fd);border-bottom-color:#bae6fd}
+#admin-import-tf{border-color:#bbf7d0;box-shadow:0 10px 26px rgba(22,163,74,.10)}
+#admin-import-tf .exam-builder-summary{background:linear-gradient(135deg,#f0fdf4,#dcfce7);color:#166534}
+#admin-import-tf .exam-builder-summary>b{background:#16a34a}
+#admin-import-tf[open] .exam-builder-summary{background:linear-gradient(135deg,#dcfce7,#bbf7d0);border-bottom-color:#bbf7d0}
+#admin-import-short{border-color:#fed7aa;box-shadow:0 10px 26px rgba(234,88,12,.10)}
+#admin-import-short .exam-builder-summary{background:linear-gradient(135deg,#fff7ed,#ffedd5);color:#9a3412}
+#admin-import-short .exam-builder-summary>b{background:#ea580c}
+#admin-import-short[open] .exam-builder-summary{background:linear-gradient(135deg,#ffedd5,#fed7aa);border-bottom-color:#fed7aa}
