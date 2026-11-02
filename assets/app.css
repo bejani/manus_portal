@@ -271,3 +271,10 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .bulk-question-hint input,.question-bulk-select input{width:auto;accent-color:#dc2626}
 .question-prompt-row{display:flex;align-items:flex-start;gap:10px;direction:rtl}.question-prompt-row .question-prompt{flex:1;min-width:0}.question-bulk-select{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;margin:10px 0 0;color:#b42318;font-size:.82rem;font-weight:800;cursor:pointer;white-space:nowrap}
 @media(max-width:620px){.exam-builder-summary{align-items:flex-start;flex-direction:column;padding:15px}.exam-builder-summary>b{width:100%;box-sizing:border-box;text-align:center}.exam-builder-content{padding:15px}.questions-card-heading{align-items:flex-start;flex-direction:column}.bulk-question-form,.bulk-question-form .btn{width:100%}.bulk-question-hint{align-items:flex-start;flex-direction:column}}
+
+/* Admin question-bank add/import panels. */
+.admin-bank-panel{margin-bottom:20px}
+.admin-bank-panel-content{padding:20px}
+.admin-bank-panel-content>h2{margin-top:0;color:#4c1d95}
+.admin-bank-panel-content>form{margin:0}
+@media(max-width:620px){.admin-bank-panel-content{padding:15px}}
