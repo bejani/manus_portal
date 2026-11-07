@@ -322,3 +322,7 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 .random-bank-card .grid-4 .btn{width:100%;height:42px;white-space:nowrap}
 @media(max-width:900px){.random-bank-card .grid-4{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.random-bank-card{padding:15px}.random-bank-card .grid-4{grid-template-columns:1fr}.random-bank-card .grid-4 .btn{width:100%}}
+
+/* وضعیت پاسخ سؤال‌ها در آزمون */
+.exam-toc-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;color:#334155;font-size:.86rem}.exam-toc-header>span{display:flex;align-items:center;gap:6px;color:#64748b;font-size:.78rem}.exam-toc-legend{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-start:7px}.exam-toc-legend.unanswered{background:#f59e0b}.exam-toc-legend.answered{background:#16a34a}.exam-toc a{border:2px solid transparent;transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease}.exam-toc a.unanswered{background:#fff7ed;color:#b45309;border-color:#fed7aa}.exam-toc a.answered{background:#dcfce7;color:#166534;border-color:#86efac}.exam-toc a:hover,.exam-toc a:focus{transform:translateY(-1px)}
+@media(max-width:520px){.exam-toc-header{align-items:flex-start;flex-direction:column;gap:5px}.exam-toc-header>span{flex-wrap:wrap}}
