@@ -15,6 +15,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){verify_csrf();$action=post_string('actio
   // ستون‌های واقعی جدول را می‌خوانیم تا INSERT در هر دو نسخه سازگار باشد.
   $available=[];
   foreach(db()->query('SHOW COLUMNS FROM exams') as $column){$available[$column['Field']]=true;}
+  if(!isset($available['max_attempts']) || !isset($available['score_policy'])){flash('error','برای فعال شدن تعداد تلاش، فایل install/migrations/20261107_enable_multiple_attempts.sql را روی دیتابیس اجرا کنید.');redirect('teacher/exams.php');}
   $examData=[
    'subject_id'=>$subjectId,
    'class_id'=>$classId,
