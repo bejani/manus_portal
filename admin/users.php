@@ -14,9 +14,10 @@ if ($_SERVER['REQUEST_METHOD']==='POST') { verify_csrf(); $action=post_string('a
     $file=$_FILES['users_file']??null; $errors=[]; $imported=0; $skipped=0;
     if (!$file || ($file['error']??UPLOAD_ERR_NO_FILE)!==UPLOAD_ERR_OK) $errors[]='فایل کاربران انتخاب نشده یا بارگذاری آن ناموفق بود.';
     elseif ((int)$file['size']>5*1024*1024) $errors[]='حجم فایل نباید بیشتر از ۵ مگابایت باشد.';
+    elseif (!in_array(strtolower(pathinfo((string)($file['name']??''), PATHINFO_EXTENSION)), ['xlsx','csv'], true)) $errors[]='فقط فایل XLSX یا CSV پذیرفته می‌شود.';
     else {
       try {
-        $rows=user_excel_rows((string)$file['tmp_name']);
+        $rows=user_excel_rows((string)$file['tmp_name'], (string)($file['name']??''));
         if (count($rows)<2) throw new RuntimeException('فایل حداقل باید شامل یک ردیف عنوان و یک کاربر باشد.');
         $map=user_excel_header_map($rows[0]);
         foreach(['full_name','mobile','role','password'] as $required) if(!array_key_exists($required,$map)) $errors[]='ستون الزامی «'.$required.'» در فایل پیدا نشد.';

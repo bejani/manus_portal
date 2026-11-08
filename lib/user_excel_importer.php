@@ -111,9 +111,9 @@ function user_excel_role(string $value): ?string
     };
 }
 
-function user_excel_rows(string $path): array
+function user_excel_rows(string $path, ?string $originalName = null): array
 {
-    $extension = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+    $extension = strtolower(pathinfo($originalName ?: $path, PATHINFO_EXTENSION));
     if ($extension === 'csv') {
         $rows = [];
         $handle = fopen($path, 'rb');
