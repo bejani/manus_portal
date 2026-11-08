@@ -329,3 +329,6 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 
 /* ورود گروهی کاربران از Excel */
 .import-users-collapsible{margin:0 0 20px;padding:0;overflow:hidden;border-color:#bfdbfe}.import-users-collapsible .add-user-summary{background:linear-gradient(135deg,#eff6ff,#eef2ff);color:#1e3a8a}.import-users-collapsible .add-user-toggle{background:#2563eb}.import-users-form{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:16px 0 10px}.import-users-form input[type=file]{min-width:240px;padding:9px;border:1px solid #cbd5e1;border-radius:10px;background:#fff}.import-users-collapsible .add-user-form>small{display:block;line-height:1.9}@media(max-width:620px){.import-users-form{align-items:stretch;flex-direction:column}.import-users-form input[type=file],.import-users-form .btn{width:100%;box-sizing:border-box}}
+
+/* حساب کاربری دانش‌آموز */
+.account-header-link{color:#fff;text-decoration:none;font-weight:800;font-size:.84rem;padding:6px 10px;border:1px solid rgba(255,255,255,.35);border-radius:9px;background:rgba(255,255,255,.1)}.account-header-link:hover{background:rgba(255,255,255,.2)}.account-hero{margin-bottom:20px}.account-card{max-width:720px;margin:0 auto}.account-password-form{max-width:560px}.account-password-form small{display:block;margin-top:5px}

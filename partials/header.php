@@ -27,6 +27,7 @@ $adminNav = [
         <?php if ($u = current_user()): ?>
             <div class="user-menu">
                 <?php $unreadNotifications = function_exists('unread_notification_count') ? unread_notification_count((int)$u['id']) : 0; ?>
+                <?php if (($u['role'] ?? '') === 'student'): ?><a class="account-header-link" href="<?= e(url('student/account.php')) ?>">حساب کاربری</a><?php endif; ?>
                 <a class="notification-link" href="<?= e(url('notifications.php')) ?>">اعلان‌ها<?php if ($unreadNotifications > 0): ?><span class="notification-badge"><?= e((string)$unreadNotifications) ?></span><?php endif; ?></a>
                 <span><?= e($u['full_name']) ?> — <?= e($u['role']) ?></span>
                 <a class="btn btn-light btn-sm" href="<?= e(url('logout.php')) ?>">خروج</a>
