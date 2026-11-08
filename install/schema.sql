@@ -79,13 +79,15 @@ CREATE TABLE exams (
 CREATE TABLE questions (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   exam_id INT UNSIGNED NOT NULL,
+  bank_question_id INT UNSIGNED NULL,
   question_text TEXT NOT NULL,
   question_type ENUM('mcq','true_false','short') NOT NULL DEFAULT 'mcq',
   score DECIMAL(6,2) NOT NULL DEFAULT 1,
   sort_order INT NOT NULL DEFAULT 0,
   feedback TEXT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  INDEX idx_questions_exam (exam_id, sort_order)
+  INDEX idx_questions_exam (exam_id, sort_order),
+  INDEX idx_questions_bank_question (bank_question_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE question_options (
@@ -114,6 +116,15 @@ CREATE TABLE attempts (
   INDEX idx_attempt_exam_student_no (exam_id, student_id, attempt_no),
   INDEX idx_attempt_student (student_id, status),
   INDEX idx_attempt_exam (exam_id, status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE attempt_questions (
+  attempt_id INT UNSIGNED NOT NULL,
+  question_id INT UNSIGNED NOT NULL,
+  sort_order INT NOT NULL DEFAULT 0,
+  PRIMARY KEY (attempt_id, question_id),
+  INDEX idx_attempt_questions_question (question_id),
+  INDEX idx_attempt_questions_order (attempt_id, sort_order)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE answers (
