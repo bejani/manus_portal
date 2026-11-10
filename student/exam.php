@@ -10,7 +10,7 @@ if($startTs&&$nowTs<$startTs)exit('این آزمون هنوز شروع نشده 
 if($endTs&&$nowTs>$endTs)exit('مهلت شرکت در این آزمون به پایان رسیده است.');
 $st=$pdo->prepare('SELECT * FROM attempts WHERE exam_id=? AND student_id=? AND revoked_at IS NULL ORDER BY attempt_no DESC,id DESC');$st->execute([$eid,$sid]);$attempts=$st->fetchAll();
 $maxAttempts=max(1,(int)($exam['max_attempts']??1));$attemptCount=count($attempts);
-if($attemptCount>=$maxAttempts){$chosen=$attempts[0];if(($exam['score_policy']??'latest')==='best'){foreach($attempts as $candidate){if((float)($candidate['score']??0)>(float)($chosen['score']??0))$chosen=$candidate;}}redirect('student/result.php?id='.$chosen['id']);}
+if($attemptCount>=$maxAttempts&&!array_filter($attempts,fn($a)=>($a['status']??'')==='in_progress')){$chosen=$attempts[0];if(($exam['score_policy']??'latest')==='best'){foreach($attempts as $candidate){if((float)($candidate['score']??0)>(float)($chosen['score']??0))$chosen=$candidate;}}redirect('student/result.php?id='.$chosen['id']);}
 $attemptNo=$attemptCount+1;
 // اگر دانش‌آموز صفحه را Refresh کند، همان تلاش باز استفاده می‌شود و تلاش جدید ساخته نمی‌شود.
 $activeAttempt=null;foreach($attempts as $existing){if(($existing['status']??'')==='in_progress'){$activeAttempt=$existing;break;}}
