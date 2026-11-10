@@ -6,7 +6,7 @@ $s = db()->prepare('SELECT a.*,e.id exam_id,e.title exam_title,e.total_score,e.i
 $s->execute([$aid,current_user()['id']]);
 $attempt = $s->fetch();
 if (!$attempt) exit('کارنامه پیدا نشد.');
-$bestAttemptStmt = db()->prepare('SELECT id FROM attempts WHERE exam_id=? AND student_id=? AND revoked_at IS NULL AND status IN ('submitted','reviewed') ORDER BY COALESCE(score,0) DESC, id DESC LIMIT 1');
+$bestAttemptStmt = db()->prepare("SELECT id FROM attempts WHERE exam_id=? AND student_id=? AND revoked_at IS NULL AND status IN ('submitted','reviewed') ORDER BY COALESCE(score,0) DESC, id DESC LIMIT 1");
 $bestAttemptStmt->execute([(int)$attempt['exam_id'], (int)current_user()['id']]);
 $bestAttemptId = (int)$bestAttemptStmt->fetchColumn();
 if ($bestAttemptId > 0 && $bestAttemptId !== $aid) { redirect('student/result.php?id='.$bestAttemptId); }
