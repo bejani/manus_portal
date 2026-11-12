@@ -374,3 +374,22 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .class-card.jump-highlight{outline:4px solid rgba(124,58,237,.75);outline-offset:3px;box-shadow:0 16px 38px rgba(91,33,182,.22);transition:outline-color .25s,box-shadow .25s}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @media(max-width:760px){.class-jump-bar{grid-template-columns:1fr;gap:9px}.class-jump-bar .btn{width:100%}}
+
+/* Visual question-bank thermometer: inventory by subject and module/chapter. */
+.bank-thermometer{margin:0 0 20px;padding:22px;border:1px solid #ddd3f7;border-radius:20px;background:radial-gradient(circle at 95% 5%,rgba(34,211,238,.13),transparent 27%),linear-gradient(135deg,#f8f5ff 0%,#fff 58%,#f0fdfa 100%);box-shadow:0 14px 34px rgba(65,45,110,.09)}
+.bank-thermometer-head{display:flex;align-items:center;justify-content:space-between;gap:18px;padding-bottom:16px;border-bottom:1px solid #e9e2f5}
+.bank-thermometer-head h2{margin:2px 0;color:#30205f;font-size:1.35rem}.bank-thermometer-head p{margin:0;font-size:.82rem}
+.bank-thermometer-total{display:flex;align-items:baseline;gap:8px;padding:10px 15px;border:1px solid #c4b5fd;border-radius:14px;background:#f3efff;color:#4c1d95;white-space:nowrap}
+.bank-thermometer-total strong{font-size:1.55rem;font-weight:900;line-height:1}.bank-thermometer-total span{font-size:.76rem;font-weight:700}
+.bank-thermometer-stats{display:flex;gap:9px;margin:13px 0 16px}.bank-thermometer-stats>div{display:flex;align-items:baseline;gap:6px;padding:5px 10px;border-radius:10px;background:#fff;border:1px solid #ece7f4}.bank-thermometer-stats strong{color:#312e81;font-size:.95rem}.bank-thermometer-stats span{color:#64748b;font-size:.75rem}
+.bank-thermometer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:12px;max-height:560px;overflow:auto;padding:2px 4px 4px 2px;scrollbar-color:#c4b5fd #f5f3ff;scrollbar-width:thin}
+.bank-thermometer-subject{min-width:0;padding:14px 15px;border:1px solid #e7e1f2;border-radius:15px;background:rgba(255,255,255,.9);box-shadow:0 5px 15px rgba(30,20,65,.045)}
+.bank-thermometer-subject-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid #f0edf5}
+.bank-thermometer-subject-head h3{margin:0;color:#352367;font-size:.96rem;font-weight:900}.bank-thermometer-subject-head small{display:block;margin-top:2px;color:#64748b;font-size:.75rem}
+.bank-thermometer-inactive{flex:0 0 auto;padding:3px 8px;border-radius:999px;background:#fff7ed;color:#c2410c;font-size:.68rem;font-weight:800}
+.bank-thermometer-chapters{display:grid;gap:9px}.bank-thermometer-row{min-width:0}
+.bank-thermometer-label{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:4px;font-size:.77rem}.bank-thermometer-label span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#475569}.bank-thermometer-label strong{flex:0 0 auto;min-width:25px;text-align:center;color:#312e81;font-size:.8rem}
+.bank-thermometer-track{height:9px;overflow:hidden;border-radius:999px;background:#eeeaf6;box-shadow:inset 0 1px 2px rgba(30,20,65,.06)}.bank-thermometer-track span{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,#8b5cf6,#06b6d4);box-shadow:0 0 9px rgba(139,92,246,.26)}
+.bank-thermometer-chapter-inactive{display:block;margin-top:2px;color:#b45309;font-size:.66rem}
+.bank-thermometer-empty{padding:18px;border:1px dashed #d8cfee;border-radius:12px;background:rgba(255,255,255,.7);color:#64748b;text-align:center;font-size:.85rem}.bank-thermometer-empty.subject-empty{padding:10px}
+@media(max-width:700px){.bank-thermometer{padding:16px;border-radius:16px}.bank-thermometer-head{align-items:flex-start;flex-direction:column}.bank-thermometer-total{align-self:flex-start}.bank-thermometer-grid{max-height:450px;grid-template-columns:1fr}}
