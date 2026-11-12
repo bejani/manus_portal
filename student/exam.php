@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../lib/bootstrap.php';
 require_role('student');
 $sid=(int)current_user()['id']; $eid=get_int('id'); $pdo=db();
-$st=$pdo->prepare("SELECT e.*,s.title subject_title,c.title class_title FROM exams e JOIN subjects s ON s.id=e.subject_id JOIN classes c ON c.id=e.class_id JOIN class_students cs ON cs.class_id=e.class_id AND cs.student_id=? WHERE e.id=? AND e.status='published'");
+$st=$pdo->prepare("SELECT e.*,s.title subject_title,c.title class_title FROM exams e JOIN subjects s ON s.id=e.subject_id JOIN classes c ON c.id=e.class_id JOIN class_students cs ON cs.class_id=e.class_id AND cs.student_id=? WHERE e.id=? AND e.archived_at IS NULL AND e.status='published'");
 $st->execute([$sid,$eid]); $exam=$st->fetch();
 if(!$exam) exit('آزمون پیدا نشد یا برای شما فعال نیست.');
 $nowTs=time(); $startTs=!empty($exam['starts_at'])?strtotime($exam['starts_at']):null; $endTs=!empty($exam['ends_at'])?strtotime($exam['ends_at']):null;

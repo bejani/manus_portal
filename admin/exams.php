@@ -7,6 +7,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = post_string('action');
     $id = (int)($_POST['id'] ?? 0);
 
+    if ($action === 'archive' && $id > 0) {
+        $active = db()->prepare("SELECT COUNT(*) FROM attempts WHERE exam_id=? AND status='in_progress' AND revoked_at IS NULL");
+        $active->execute([$id]);
+        if ((int)$active->fetchColumn() > 0) {
+            flash('error', 'تا وقتی دانش‌آموزی در حال پاسخ‌گویی به این آزمون است، امکان بایگانی آن نیست.');
+        } else {
+            $s = db()->prepare("UPDATE exams SET archived_at=NOW(),status='closed' WHERE id=? AND archived_at IS NULL");
+            $s->execute([$id]);
+            if ($s->rowCount()) {
+                audit('archive_exam', 'exam', $id);
+                flash('success', 'آزمون بایگانی شد؛ سوابق و کارنامه‌ها حفظ شده‌اند.');
+            } else {
+                flash('error', 'آزمون پیدا نشد یا از قبل بایگانی شده است.');
+            }
+        }
+    } elseif ($action === 'unarchive' && $id > 0) {
+        $s = db()->prepare("UPDATE exams SET archived_at=NULL,status='draft' WHERE id=? AND archived_at IS NOT NULL");
+        $s->execute([$id]);
+        if ($s->rowCount()) {
+            audit('unarchive_exam', 'exam', $id);
+            flash('success', 'آزمون از بایگانی خارج شد و برای جلوگیری از انتشار ناخواسته به پیش‌نویس برگشت.');
+        } else {
+            flash('error', 'آزمون بایگانی‌شده‌ای با این شناسه پیدا نشد.');
+        }
+    }
     if ($action === 'status' && $id > 0) {
         $status = post_string('status');
         if (in_array($status, ['draft', 'published', 'closed'], true)) {
@@ -59,10 +84,11 @@ $classId = max(0, (int)($_GET['class_id'] ?? 0));
 $subjectId = max(0, (int)($_GET['subject_id'] ?? 0));
 $teacherId = max(0, (int)($_GET['teacher_id'] ?? 0));
 $status = (string)($_GET['status'] ?? '');
+$archiveView = (($_GET['archived'] ?? '') === '1');
 $allowedStatuses = ['draft', 'published', 'closed'];
 if (!in_array($status, $allowedStatuses, true)) $status = '';
 
-$where = [];
+$where = [$archiveView ? 'e.archived_at IS NOT NULL' : 'e.archived_at IS NULL'];
 $params = [];
 if ($search !== '') {
     $where[] = '(e.title LIKE ? OR s.title LIKE ? OR c.title LIKE ? OR u.full_name LIKE ?)';
@@ -86,7 +112,7 @@ if ($status !== '') {
     $params[] = $status;
 }
 
-$sql = 'SELECT e.id,e.title,e.status,e.total_score,e.created_at,s.title subject_title,c.title class_title,u.full_name teacher_name,
+$sql = 'SELECT e.id,e.title,e.status,e.total_score,e.created_at,e.archived_at,s.title subject_title,c.title class_title,u.full_name teacher_name,
         (SELECT COUNT(*) FROM questions q WHERE q.exam_id=e.id) question_count,
         (SELECT COUNT(*) FROM attempts a WHERE a.exam_id=e.id) attempt_count
         FROM exams e
@@ -157,6 +183,13 @@ require __DIR__ . '/../partials/header.php';
                 <?php endforeach; ?>
             </select>
         </div>
+        <div class="form-group">
+            <label for="filter-archived">نمایش</label>
+            <select id="filter-archived" name="archived">
+                <option value="" <?= !$archiveView ? 'selected' : '' ?>>آزمون‌های جاری</option>
+                <option value="1" <?= $archiveView ? 'selected' : '' ?>>آزمون‌های بایگانی‌شده</option>
+            </select>
+        </div>
         <div class="form-group exam-filter-actions">
             <button class="btn btn-primary" type="submit">اعمال فیلتر</button>
             <a class="btn btn-light" href="<?= e(url('admin/exams.php')) ?>">پاک‌کردن</a>
@@ -168,11 +201,11 @@ require __DIR__ . '/../partials/header.php';
 <div class="card table-wrap">
     <table class="table">
         <thead>
-            <tr><th>آزمون</th><th>درس / کلاس</th><th>معلم</th><th>پرسش</th><th>تلاش</th><th>وضعیت</th><th>عملیات</th></tr>
+            <tr><th>آزمون</th><th>درس / کلاس</th><th>معلم</th><th>پرسش</th><th>تلاش</th><th>وضعیت</th><th>بایگانی</th><th>عملیات</th></tr>
         </thead>
         <tbody>
         <?php if (!$exams): ?>
-            <tr><td colspan="7" class="muted text-center">آزمونی با این فیلترها پیدا نشد.</td></tr>
+            <tr><td colspan="8" class="muted text-center">آزمونی با این فیلترها پیدا نشد.</td></tr>
         <?php else: foreach ($exams as $exam): ?>
             <tr>
                 <td><strong><?= e($exam['title']) ?></strong><br><small class="muted">نمره کل: <?= format_score($exam['total_score']) ?> — <?= e($exam['created_at']) ?></small></td>
@@ -181,8 +214,13 @@ require __DIR__ . '/../partials/header.php';
                 <td><?= e((string)$exam['question_count']) ?></td>
                 <td><?= e((string)$exam['attempt_count']) ?></td>
                 <td><span class="badge <?= e($exam['status']) ?>"><?= e($statusLabels[$exam['status']] ?? $exam['status']) ?></span></td>
+                <td><?= $exam['archived_at'] ? '<span class="badge">بایگانی‌شده</span>' : '—' ?></td>
                 <td>
                     <div class="actions">
+                        <?php if ($exam['archived_at']): ?>
+                            <a class="btn btn-sm btn-light" href="<?= e(url('teacher/results.php?exam_id=' . $exam['id'])) ?>">سوابق و نتایج</a>
+                            <form method="post" style="display:inline" onsubmit="return confirm('آزمون از بایگانی خارج و به پیش‌نویس برگردانده شود؟')"><?= csrf_field() ?><input type="hidden" name="action" value="unarchive"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><button class="btn btn-sm btn-success">بازیابی</button></form>
+                        <?php else: ?>
                         <a class="btn btn-sm btn-primary" href="<?= e(url('teacher/exams.php?id=' . $exam['id'])) ?>">مدیریت پرسش‌ها</a>
                         <a class="btn btn-sm btn-light" href="<?= e(url('admin/exam_preview.php?id=' . $exam['id'])) ?>">پیش‌نمایش</a>
                         <a class="btn btn-sm btn-light" href="<?= e(url('teacher/results.php?exam_id=' . $exam['id'])) ?>">نتایج</a>
@@ -194,6 +232,8 @@ require __DIR__ . '/../partials/header.php';
                             <form method="post" style="display:inline"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><input type="hidden" name="status" value="draft"><button class="btn btn-sm btn-light">بازکردن</button></form>
                         <?php else: ?>
                             <form method="post" style="display:inline"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><input type="hidden" name="status" value="published"><button class="btn btn-sm btn-success">انتشار</button></form>
+                        <?php endif; ?>
+                        <form method="post" style="display:inline" onsubmit="return confirm('آزمون از فهرست‌های جاری و دسترس دانش‌آموز خارج شود؟ سوابق و کارنامه‌ها حذف نمی‌شوند.')"><?= csrf_field() ?><input type="hidden" name="action" value="archive"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><button class="btn btn-sm btn-light">بایگانی</button></form>
                         <?php endif; ?>
                     </div>
                 </td>

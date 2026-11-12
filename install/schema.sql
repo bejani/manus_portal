@@ -69,11 +69,13 @@ CREATE TABLE exams (
   starts_at DATETIME NULL,
   ends_at DATETIME NULL,
   status ENUM('draft','published','closed') NOT NULL DEFAULT 'draft',
+  archived_at DATETIME NULL DEFAULT NULL,
   created_by INT UNSIGNED NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   INDEX idx_exams_class_subject (class_id, subject_id),
   INDEX idx_exams_subject_chapter (subject_id, chapter),
-  INDEX idx_exams_status (status)
+  INDEX idx_exams_status (status),
+  INDEX idx_exams_archived_status (archived_at, status)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE questions (
