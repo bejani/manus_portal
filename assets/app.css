@@ -537,3 +537,13 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .teacher-dashboard-stats strong{color:#0b1f3a}
 .teacher-dashboard-stats small{color:#334e68;font-weight:700}
 .teacher-dashboard-stats .teacher-stat-icon:before{filter:saturate(1.2)}
+
+/* Make teacher metrics immediately legible while retaining their compact role. */
+.teacher-dashboard-stats{opacity:1}
+.teacher-dashboard-stats .role-stat-card{grid-template-columns:34px minmax(0,1fr) auto;column-gap:10px;min-height:76px;padding:12px 15px}
+.teacher-dashboard-stats .teacher-stat-icon{grid-row:1 / span 2;width:30px;height:30px;font-size:1rem;opacity:1}
+.teacher-dashboard-stats .teacher-stat-label{grid-column:2;grid-row:1;align-self:end;color:#102a43;font-size:.82rem;font-weight:900;line-height:1.35}
+.teacher-dashboard-stats strong{grid-column:3;grid-row:1 / span 2;align-self:center;color:#071b33;font-size:1.55rem;font-weight:900;line-height:1.1;white-space:nowrap}
+.teacher-dashboard-stats small{grid-column:2;grid-row:2;align-self:start;display:block;color:#334e68;font-size:.7rem;font-weight:700;line-height:1.3}
+@media(max-width:520px){.teacher-dashboard-stats .role-stat-card{grid-template-columns:28px minmax(0,1fr) auto;min-height:68px;padding:10px}.teacher-dashboard-stats .teacher-stat-icon{width:26px;height:26px}.teacher-dashboard-stats .teacher-stat-label{font-size:.74rem}.teacher-dashboard-stats strong{font-size:1.28rem}.teacher-dashboard-stats small{display:block;font-size:.64rem}}
+@media(max-width:520px){.teacher-dashboard-stats .role-stat-card small{display:block;font-size:.64rem;color:#334e68}}
