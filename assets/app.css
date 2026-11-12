@@ -492,3 +492,26 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 
 .student-exam-teacher{display:flex;align-items:center;gap:5px;margin:3px 0 0!important;color:#64748b;font-size:.8rem;line-height:1.5}
 .student-exam-teacher strong{color:#39456a;font-weight:800}
+
+/* Teacher dashboard: put assigned teaching workload ahead of secondary metrics. */
+.teacher-subject-panel{position:relative;margin:0 0 20px;padding:22px 24px;border:1px solid #d8e8e5;border-radius:22px;background:radial-gradient(circle at 8% 0%,rgba(20,184,166,.10),transparent 26%),linear-gradient(135deg,#f4fbf9 0%,#fff 58%,#f6f9ff 100%);box-shadow:0 12px 28px rgba(15,78,75,.07)}
+.teacher-subject-heading{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:15px}
+.teacher-subject-heading h2{margin:2px 0 3px;color:#123f43;font-size:1.18rem}.teacher-subject-heading p{margin:0;color:#64748b;font-size:.82rem}
+.teacher-subject-count{flex:0 0 auto;padding:6px 11px;border:1px solid #c7e8df;border-radius:999px;background:#eaf8f3;color:#0f766e;font-size:.78rem;font-weight:900}
+.teacher-subject-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,245px),1fr));gap:10px}
+.teacher-subject-card{display:flex;align-items:center;gap:11px;min-width:0;padding:12px 14px;border:1px solid #e2ecea;border-radius:14px;background:rgba(255,255,255,.93);box-shadow:0 4px 12px rgba(15,23,42,.035);transition:transform .16s ease,box-shadow .16s ease}
+.teacher-subject-card:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(15,23,42,.08)}
+.teacher-subject-mark{position:relative;flex:0 0 36px;width:36px;height:36px;border-radius:12px;background:linear-gradient(145deg,#ccfbf1,#dbeafe)}
+.teacher-subject-mark:before,.teacher-subject-mark:after{position:absolute;content:"";background:#0f766e;border-radius:3px}.teacher-subject-mark:before{width:15px;height:3px;top:12px;right:10px;box-shadow:0 6px 0 #0f766e}.teacher-subject-mark:after{width:3px;height:15px;top:10px;right:8px;opacity:.45}
+.teacher-subject-card>div{min-width:0}.teacher-subject-card strong{display:block;overflow:hidden;color:#1e3a45;font-size:.88rem;font-weight:900;text-overflow:ellipsis;white-space:nowrap}.teacher-subject-class{display:block;margin-top:3px;overflow:hidden;color:#64748b;font-size:.75rem;text-overflow:ellipsis;white-space:nowrap}
+.teacher-subject-empty{padding:13px 15px;border:1px dashed #cbdad7;border-radius:12px;background:rgba(255,255,255,.7);color:#64748b;font-size:.84rem}
+.teacher-overview-label{display:flex;align-items:baseline;gap:9px;margin:0 0 8px 2px;color:#64748b}.teacher-overview-label strong{color:#52616d;font-size:.82rem}.teacher-overview-label span{font-size:.72rem}
+.teacher-dashboard-stats{grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:0 0 22px;opacity:.84}
+.teacher-dashboard-stats .role-stat-card{display:grid;grid-template-columns:28px 1fr auto;align-items:center;column-gap:8px;min-height:58px;padding:9px 12px;border:1px solid #e6ebef;border-top:2px solid #cbd5e1;border-radius:13px;background:linear-gradient(135deg,#fff,#f8fafc);box-shadow:0 3px 10px rgba(15,23,42,.035)}
+.teacher-dashboard-stats .teacher-stat-icon{grid-row:1 / span 2;width:26px;height:26px;margin:0;border:1px solid #e2e8f0;border-radius:9px;background:#f1f5f9;box-shadow:none;font-size:.9rem;opacity:.62;transform:none}
+.teacher-dashboard-stats .teacher-stat-label{grid-column:2;grid-row:1;font-size:.7rem;font-weight:700;color:#64748b}
+.teacher-dashboard-stats strong{grid-column:3;grid-row:1 / span 2;margin:0;color:#475569;font-size:1.12rem;line-height:1}
+.teacher-dashboard-stats small{grid-column:2;grid-row:2;font-size:.63rem;color:#94a3b8}
+.teacher-dashboard-stats .teacher-stat-published,.teacher-dashboard-stats .teacher-stat-questions,.teacher-dashboard-stats .teacher-stat-attempts{border-top-color:#d7dee7}
+@media(max-width:850px){.teacher-subject-panel{padding:18px}.teacher-dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){.teacher-subject-heading{align-items:flex-start}.teacher-subject-grid{grid-template-columns:1fr}.teacher-dashboard-stats .role-stat-card{grid-template-columns:24px 1fr auto;padding:8px}.teacher-dashboard-stats .role-stat-card small{display:none}}
