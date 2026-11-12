@@ -466,3 +466,14 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .exam-submit-modal.is-danger .exam-submit-summary strong{color:#b91c1c}
 .exam-submit-modal.is-danger .exam-submit-summary .exam-submit-lock{background:#fee2e2;color:#b91c1c}
 .exam-submit-modal.is-danger .exam-submit-actions #examSubmitContinue{background:linear-gradient(135deg,#dc2626,#ea580c);box-shadow:0 8px 20px rgba(220,38,38,.28)}
+
+/* Compact the four key result indicators into tidy, readable cards. */
+.result-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:14px 0 18px;align-items:stretch}
+.result-summary-grid>.stat{min-width:0;min-height:102px;padding:16px 17px;border:1px solid #e5e7eb;border-top:3px solid #6d5bd0;border-radius:15px;background:linear-gradient(145deg,#fff 0%,#faf9ff 100%);box-shadow:0 5px 15px rgba(42,35,79,.055);display:flex;flex-direction:column;justify-content:center;gap:5px}
+.result-summary-grid>.stat:nth-child(2){border-top-color:#0891b2;background:linear-gradient(145deg,#fff 0%,#f0fdff 100%)}
+.result-summary-grid>.stat:nth-child(3){border-top-color:#059669;background:linear-gradient(145deg,#fff 0%,#f0fdf8 100%)}
+.result-summary-grid>.stat:nth-child(4){border-top-color:#d97706;background:linear-gradient(145deg,#fff 0%,#fffbeb 100%)}
+.result-summary-grid>.stat>span{position:relative;z-index:1;color:#64748b;font-size:.82rem;font-weight:700;line-height:1.6}
+.result-summary-grid>.stat>strong{position:relative;z-index:1;display:block;margin:0;color:#25214a;font-size:1.35rem;line-height:1.35;overflow-wrap:anywhere}
+@media(max-width:900px){.result-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.result-summary-grid>.stat{min-height:92px;padding:13px 15px}}
+@media(max-width:480px){.result-summary-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.result-summary-grid>.stat{min-height:86px;padding:11px 12px}.result-summary-grid>.stat>span{font-size:.75rem}.result-summary-grid>.stat>strong{font-size:1.12rem}}
