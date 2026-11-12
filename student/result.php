@@ -1,20 +1,33 @@
 <?php
 require_once __DIR__ . '/../lib/bootstrap.php';
-require_role('student');
+require_role('student', 'teacher', 'admin');
 $aid = get_int('id');
-$s = db()->prepare('SELECT a.*,e.id exam_id,e.title exam_title,e.total_score,e.instructions,e.max_attempts,e.score_policy,s.title subject_title FROM attempts a JOIN exams e ON e.id=a.exam_id JOIN subjects s ON s.id=e.subject_id WHERE a.id=? AND a.student_id=?');
-$s->execute([$aid,current_user()['id']]);
+$viewerRole = (string)(current_user()['role'] ?? '');
+if ($viewerRole === 'student') {
+    $s = db()->prepare('SELECT a.*,e.id exam_id,e.title exam_title,e.total_score,e.instructions,e.max_attempts,e.score_policy,s.title subject_title FROM attempts a JOIN exams e ON e.id=a.exam_id JOIN subjects s ON s.id=e.subject_id WHERE a.id=? AND a.student_id=?');
+    $s->execute([$aid, current_user()['id']]);
+} elseif ($viewerRole === 'admin') {
+    $s = db()->prepare('SELECT a.*,e.id exam_id,e.title exam_title,e.total_score,e.instructions,e.max_attempts,e.score_policy,s.title subject_title FROM attempts a JOIN exams e ON e.id=a.exam_id JOIN subjects s ON s.id=e.subject_id WHERE a.id=?');
+    $s->execute([$aid]);
+} else {
+    $s = db()->prepare('SELECT a.*,e.id exam_id,e.title exam_title,e.total_score,e.instructions,e.max_attempts,e.score_policy,s.title subject_title FROM attempts a JOIN exams e ON e.id=a.exam_id JOIN subjects s ON s.id=e.subject_id WHERE a.id=? AND e.created_by=?');
+    $s->execute([$aid, current_user()['id']]);
+}
 $attempt = $s->fetch();
-if (!$attempt) exit('کارنامه پیدا نشد.');
-$bestAttemptStmt = db()->prepare("SELECT id FROM attempts WHERE exam_id=? AND student_id=? AND revoked_at IS NULL AND status IN ('submitted','reviewed') ORDER BY COALESCE(score,0) DESC, id DESC LIMIT 1");
-$bestAttemptStmt->execute([(int)$attempt['exam_id'], (int)current_user()['id']]);
-$bestAttemptId = (int)$bestAttemptStmt->fetchColumn();
-if ($bestAttemptId > 0 && $bestAttemptId !== $aid) { redirect('student/result.php?id='.$bestAttemptId); }
-$attemptsStmt = db()->prepare('SELECT COUNT(*) FROM attempts WHERE exam_id=? AND student_id=? AND revoked_at IS NULL');
-$attemptsStmt->execute([(int)$attempt['exam_id'], (int)current_user()['id']]);
-$attemptCount = (int)$attemptsStmt->fetchColumn();
-$maxAttempts = max(1, (int)($attempt['max_attempts'] ?? 1));
-$attemptsRemaining = max(0, $maxAttempts - $attemptCount);
+if (!$attempt) exit('کارنامه پیدا نشد یا دسترسی ندارید.');
+if ($viewerRole === 'student') {
+    $bestAttemptStmt = db()->prepare("SELECT id FROM attempts WHERE exam_id=? AND student_id=? AND revoked_at IS NULL AND status IN ('submitted','reviewed') ORDER BY COALESCE(score,0) DESC, id DESC LIMIT 1");
+    $bestAttemptStmt->execute([(int)$attempt['exam_id'], (int)current_user()['id']]);
+    $bestAttemptId = (int)$bestAttemptStmt->fetchColumn();
+    if ($bestAttemptId > 0 && $bestAttemptId !== $aid) { redirect('student/result.php?id='.$bestAttemptId); }
+    $attemptsStmt = db()->prepare('SELECT COUNT(*) FROM attempts WHERE exam_id=? AND student_id=? AND revoked_at IS NULL');
+    $attemptsStmt->execute([(int)$attempt['exam_id'], (int)current_user()['id']]);
+    $attemptCount = (int)$attemptsStmt->fetchColumn();
+    $maxAttempts = max(1, (int)($attempt['max_attempts'] ?? 1));
+    $attemptsRemaining = max(0, $maxAttempts - $attemptCount);
+} else {
+    $attemptsRemaining = 0;
+}
 $s = db()->prepare('SELECT q.question_text,q.chapter,q.score,q.question_type,a.answer_text,a.is_correct,a.awarded_score,a.teacher_comment,o.option_text selected_text FROM answers a JOIN questions q ON q.id=a.question_id LEFT JOIN question_options o ON o.id=a.selected_option_id WHERE a.attempt_id=? ORDER BY q.sort_order');
 $s->execute([$aid]);
 $answers = $s->fetchAll();
@@ -39,5 +52,5 @@ require __DIR__ . '/../partials/header.php';
 <div class="card result-progress-card"><div class="section-heading"><div><span class="eyebrow">خلاصهٔ عملکرد</span><h2>وضعیت کلی شما</h2></div><span class="badge <?= $percentage >= 70 ? 'success' : 'warning' ?>"><?= e($percentage >= 80 ? 'قوی' : ($percentage >= 50 ? 'نیازمند مرور' : 'نیازمند تمرین')) ?></span></div><div class="progress result-progress"><span style="width:<?= min(100,max(0,$percentage)) ?>%"></span></div><div class="result-progress-labels"><span>۰٪</span><strong><?= format_score($percentage) ?>٪</strong><span>۱۰۰٪</span></div><div class="alert info"><strong>بازخورد خودکار:</strong> <?= e($feedback) ?></div><?php if ($pendingReview): ?><div class="alert warning"><?= number_format($pendingReview) ?> پاسخ تشریحی هنوز نیازمند بررسی معلم است؛ نمرهٔ نهایی ممکن است تغییر کند.</div><?php endif; ?><div class="grid grid-3 result-type-grid"><?php foreach (['mcq'=>'تستی','true_false'=>'صحیح/غلط','short'=>'پاسخ کوتاه'] as $type=>$label): $st=$typeStats[$type]; $rate=$st['max']>0?$st['earned']/$st['max']*100:0; ?><div class="result-type-card"><strong><?= format_score($rate) ?>%</strong><span><?= e($label) ?></span><small><?= number_format($st['total']) ?> سؤال</small></div><?php endforeach; ?></div></div>
 <?php if ($chapterStats): ?><div class="card"><div class="section-heading"><div><span class="eyebrow">تحلیل آموزشی</span><h2>عملکرد بر اساس فصل و مبحث</h2></div></div><div class="table-wrap"><table class="table"><thead><tr><th>فصل یا مبحث</th><th>تعداد سؤال</th><th>نمره کسب‌شده</th><th>درصد عملکرد</th><th>وضعیت</th></tr></thead><tbody><?php foreach ($chapterStats as $chapter=>$st): $rate=$st['max']>0?$st['earned']/$st['max']*100:0; ?><tr><td><?= e($chapter) ?></td><td><?= e((string)$st['count']) ?></td><td><?= format_score($st['earned']) ?> از <?= format_score($st['max']) ?></td><td><?= format_score($rate) ?>%</td><td><?= e($rate>=80?'قوی':($rate>=50?'نیازمند مرور':'نیازمند تمرین بیشتر')) ?></td></tr><?php endforeach; ?></tbody></table></div></div><?php endif; ?>
 <div class="card"><div class="section-heading"><div><span class="eyebrow">مرور آزمون</span><h2>جزئیات پاسخ‌ها</h2></div><span class="muted"><?= number_format(count($answers)) ?> سؤال</span></div><?php foreach ($answers as $i=>$answer): $answerStatus = $answer['is_correct'] === null ? 'pending' : ((int)$answer['is_correct'] ? 'correct' : 'wrong'); ?><article class="result-answer question <?= e($answerStatus) ?>"><div class="result-answer-head"><div class="question-prompt"><span class="question-number"><?= ($i+1) ?>.</span><?= question_prompt_html($answer['question_text']) ?></div><span class="badge <?= $answerStatus==='correct'?'success':($answerStatus==='pending'?'warning':'') ?>"><?= $answerStatus==='correct'?'صحیح':($answerStatus==='pending'?'در انتظار بررسی':'نادرست') ?></span></div><?php if (!empty($answer['chapter'])): ?><p class="muted">فصل / مبحث: <?= e($answer['chapter']) ?></p><?php endif; ?><p><strong>پاسخ شما:</strong> <?= e($answer['selected_text'] ?? $answer['answer_text'] ?? 'بدون پاسخ') ?></p><p>نمره کسب‌شده: <?= format_score($answer['awarded_score'] ?? 0) ?> از <?= format_score($answer['score']) ?></p><?php if ($answer['teacher_comment']): ?><div class="result-teacher-comment"><strong>بازخورد معلم:</strong><br><?= nl2br(e($answer['teacher_comment'])) ?></div><?php endif; ?></article><?php endforeach; ?></div>
-<div class="actions result-actions"><?php if($attemptsRemaining>0): ?><a class="btn btn-primary" href="<?= e(url('student/exam.php?id='.$attempt['exam_id'])) ?>">تلاش دوباره (<?= e((string)$attemptsRemaining) ?> نوبت باقی‌مانده)</a><?php endif; ?><a class="btn btn-light" href="<?= e(url('student/feedback.php')) ?>">بازخوردهای آموزشی من</a><a class="btn btn-light" href="<?= e(url('reports/share.php?id='.$aid)) ?>">ساخت لینک اشتراک</a><a class="btn btn-success" href="<?= e(url('reports/student_export.php?id='.$aid)) ?>">خروجی Excel</a><button class="btn btn-primary" onclick="window.print()">چاپ کارنامه</button></div>
+<div class="actions result-actions"><?php if($viewerRole==='student'): ?><?php if($attemptsRemaining>0): ?><a class="btn btn-primary" href="<?= e(url('student/exam.php?id='.$attempt['exam_id'])) ?>">تلاش دوباره (<?= e((string)$attemptsRemaining) ?> نوبت باقی‌مانده)</a><?php endif; ?><a class="btn btn-light" href="<?= e(url('student/feedback.php')) ?>">بازخوردهای آموزشی من</a><a class="btn btn-light" href="<?= e(url('reports/share.php?id='.$aid)) ?>">ساخت لینک اشتراک</a><a class="btn btn-success" href="<?= e(url('reports/student_export.php?id='.$aid)) ?>">خروجی Excel</a><?php else: ?><a class="btn btn-light" href="<?= e(url('teacher/attempts.php?exam_id='.$attempt['exam_id'])) ?>">بازگشت به مدیریت تلاش‌ها</a><?php endif; ?><button class="btn btn-primary" onclick="window.print()">چاپ کارنامه</button></div>
 <?php require __DIR__ . '/../partials/footer.php'; ?>
