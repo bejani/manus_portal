@@ -332,3 +332,8 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 
 /* حساب کاربری دانش‌آموز */
 .account-header-link{color:#fff;text-decoration:none;font-weight:800;font-size:.84rem;padding:6px 10px;border:1px solid rgba(255,255,255,.35);border-radius:9px;background:rgba(255,255,255,.1)}.account-header-link:hover{background:rgba(255,255,255,.2)}.account-hero{margin-bottom:20px}.account-card{max-width:720px;margin:0 auto}.account-password-form{max-width:560px}.account-password-form small{display:block;margin-top:5px}
+
+/* Highlight the exam-management workspace without changing other dashboards. */
+body.page-exams{background:radial-gradient(ellipse at 8% 12%,rgba(139,92,246,.19),transparent 34%),radial-gradient(ellipse at 92% 36%,rgba(14,165,233,.15),transparent 32%),linear-gradient(135deg,#e6ddff 0%,#edf0ff 52%,#dceeff 100%)}
+body.page-exams .page-content{position:relative}
+body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px rgba(71,54,135,.10)}

@@ -20,7 +20,7 @@ $adminNav = [
     <title><?= e($title) ?> | <?= e($config['app']['name']) ?></title>
     <link rel="stylesheet" href="<?= e(url('assets/app.css')) ?>">
 </head>
-<body class="role-<?= e(current_user()['role'] ?? 'guest') ?>">
+<body class="role-<?= e(current_user()['role'] ?? 'guest') ?><?= $currentPage === 'exams.php' ? ' page-exams' : '' ?>">
 <header class="site-header">
     <div class="container header-inner">
         <a class="brand" href="<?= e(url('index.php')) ?>"><?= e($config['app']['name']) ?></a>
