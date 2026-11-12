@@ -26,24 +26,19 @@ else{
     $ins=$pdo->prepare('INSERT INTO attempts(exam_id,student_id,attempt_no,started_at,status,score,percentage) VALUES(?,?,?,?,"in_progress",0,0)');$ins->execute([$eid,$sid,$attemptNo,$now]);$aid=(int)$pdo->lastInsertId();
     if($attemptNo===1){$source=$pdo->prepare('SELECT id,sort_order FROM questions WHERE exam_id=? ORDER BY sort_order,id');$source->execute([$eid]);$sourceRows=$source->fetchAll();}
     else{
-      $needed=(int)$pdo->query('SELECT COUNT(*) FROM questions WHERE exam_id='.(int)$eid)->fetchColumn();
+      $neededStmt=$pdo->prepare('SELECT COUNT(*) FROM attempt_questions aq JOIN attempts a ON a.id=aq.attempt_id WHERE a.exam_id=? AND a.student_id=? AND a.id=(SELECT a0.id FROM attempts a0 WHERE a0.exam_id=? AND a0.student_id=? ORDER BY a0.started_at,a0.id LIMIT 1)');$neededStmt->execute([$eid,$sid,$eid,$sid]);$needed=(int)$neededStmt->fetchColumn();if($needed<1){throw new RuntimeException('تعداد سؤال‌های تلاش اول پیدا نشد.');}
       $used=$pdo->prepare('SELECT DISTINCT q.bank_question_id FROM questions q JOIN attempt_questions aq ON aq.question_id=q.id JOIN attempts a ON a.id=aq.attempt_id WHERE a.exam_id=? AND a.student_id=? AND q.bank_question_id IS NOT NULL');$used->execute([$eid,$sid]);$usedIds=array_map('intval',$used->fetchAll(PDO::FETCH_COLUMN));
       $sql='SELECT qb.id FROM question_bank qb WHERE qb.subject_id=? AND qb.is_active=1';$params=[(int)$exam['subject_id']];
       if(trim((string)($exam['chapter']??''))!==''){$sql.=' AND TRIM(qb.chapter)=TRIM(?)';$params[]=$exam['chapter'];}
       if($usedIds){$sql.=' AND qb.id NOT IN ('.implode(',',array_fill(0,count($usedIds),'?')).')';$params=array_merge($params,$usedIds);}
       $sql.=' ORDER BY RAND() LIMIT '.max(1,$needed);$qbank=$pdo->prepare($sql);$qbank->execute($params);$bankIds=array_map('intval',$qbank->fetchAll(PDO::FETCH_COLUMN));
-      if(count($bankIds)<$needed){
-        // اگر بانک برای ساخت فرم جدید کافی نیست، آزمون باز هم قابل تکرار باشد و همان سؤال‌های آزمون را استفاده کند.
-        $source=$pdo->prepare('SELECT id,sort_order FROM questions WHERE exam_id=? ORDER BY sort_order,id');$source->execute([$eid]);$sourceRows=$source->fetchAll();
-        if(count($sourceRows)<$needed){throw new RuntimeException('مجموعه سؤال آزمون برای تلاش مجدد در دسترس نیست.');}
-      }else{
-        $sourceRows=[];$marks=implode(',',array_fill(0,count($bankIds),'?'));$fetch=$pdo->prepare('SELECT qb.* FROM question_bank qb WHERE qb.id IN ('.$marks.')');$fetch->execute($bankIds);
-        $order=0;$insertQ=$pdo->prepare('INSERT INTO questions(exam_id,bank_question_id,question_text,image_path,question_type,score,sort_order,reference_answer,rubric) VALUES(?,?,?,?,?,?,?,?,?)');$insertO=$pdo->prepare('INSERT INTO question_options(question_id,option_text,image_path,option_key,is_correct,sort_order) VALUES(?,?,?,?,?,?)');
-        foreach($fetch as $b){$insertQ->execute([$eid,$b['id'],$b['question_text'],$b['image_path']??null,$b['question_type'],$b['score'],$order++,$b['reference_answer'],$b['rubric']]);$nq=(int)$pdo->lastInsertId();$ops=$pdo->prepare('SELECT * FROM question_bank_options WHERE bank_question_id=? ORDER BY sort_order,id');$ops->execute([$b['id']]);foreach($ops as $op)$insertO->execute([$nq,$op['option_text'],$op['image_path']??null,$op['option_key'],$op['is_correct'],$op['sort_order']]);$sourceRows[]=['id'=>$nq,'sort_order'=>$order];}
-      }
+      if(count($bankIds)<$needed){throw new RuntimeException('بانک سؤال برای این درس/پودمان سؤال تازه و استفاده‌نشدهٔ کافی ندارد.');}
+      $sourceRows=[];$marks=implode(',',array_fill(0,count($bankIds),'?'));$fetch=$pdo->prepare('SELECT qb.* FROM question_bank qb WHERE qb.id IN ('.$marks.')');$fetch->execute($bankIds);
+      $order=0;$insertQ=$pdo->prepare('INSERT INTO questions(exam_id,bank_question_id,question_text,image_path,question_type,score,sort_order,reference_answer,rubric) VALUES(?,?,?,?,?,?,?,?,?)');$insertO=$pdo->prepare('INSERT INTO question_options(question_id,option_text,image_path,option_key,is_correct,sort_order) VALUES(?,?,?,?,?,?)');
+      foreach($fetch as $b){$insertQ->execute([$eid,$b['id'],$b['question_text'],$b['image_path']??null,$b['question_type'],$b['score'],$order++,$b['reference_answer'],$b['rubric']]);$nq=(int)$pdo->lastInsertId();$ops=$pdo->prepare('SELECT * FROM question_bank_options WHERE bank_question_id=? ORDER BY sort_order,id');$ops->execute([$b['id']]);foreach($ops as $op)$insertO->execute([$nq,$op['option_text'],$op['image_path']??null,$op['option_key'],$op['is_correct'],$op['sort_order']]);$sourceRows[]=['id'=>$nq,'sort_order'=>$order];}
     }
     $map=$pdo->prepare('INSERT INTO attempt_questions(attempt_id,question_id,sort_order) VALUES(?,?,?)');foreach($sourceRows as $i=>$row)$map->execute([$aid,(int)$row['id'],$i]);if($attemptNo>$maxAttempts){$pdo->prepare('UPDATE exam_retake_grants SET used_at=?,used_attempt_id=? WHERE id=?')->execute([$now,$aid,$grantId]);}$pdo->commit();
-  }catch(Throwable $e){if($pdo->inTransaction())$pdo->rollBack();flash('error','ساخت مجموعه سؤال آزمون انجام نشد.');redirect('student/index.php');}
+  }catch(Throwable $e){if($pdo->inTransaction())$pdo->rollBack();error_log('[exam_retake_questions] exam='.(int)$eid.' student='.(int)$sid.' error='.$e->getMessage());flash('error','برای فرصت مجدد، بانک سؤال این درس/پودمان سؤال تازه و استفاده‌نشدهٔ کافی ندارد. مجوز شما مصرف نشده است؛ لطفاً با معلم یا مدیر هماهنگ کنید.');redirect('student/index.php');}
 }
 $randomRank=function($key)use($sid,$eid,$attemptNo){return hash('sha256',$sid.'|'.$eid.'|'.$attemptNo.'|'.$key);};
 $st=$pdo->prepare('SELECT q.*,GROUP_CONCAT(CONCAT(o.id,"::",o.option_key,"::",o.option_text,"::",COALESCE(o.image_path,"")) ORDER BY o.sort_order SEPARATOR "||") option_data FROM attempt_questions aq JOIN questions q ON q.id=aq.question_id LEFT JOIN question_options o ON o.question_id=q.id WHERE aq.attempt_id=? GROUP BY q.id,aq.sort_order ORDER BY aq.sort_order');$st->execute([$aid]);$questions=$st->fetchAll();
