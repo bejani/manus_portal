@@ -531,3 +531,9 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .teacher-dashboard-stats>.role-stat-card:nth-child(2) .teacher-stat-icon:before{color:#1d4ed8}
 .teacher-dashboard-stats>.role-stat-card:nth-child(3) .teacher-stat-icon:before{color:#6d28d9}
 .teacher-dashboard-stats>.role-stat-card:nth-child(4) .teacher-stat-icon:before{color:#c2410c}
+
+/* Dark navy typography for better readability in the compact teacher metrics. */
+.teacher-dashboard-stats .teacher-stat-label{color:#102a43}
+.teacher-dashboard-stats strong{color:#0b1f3a}
+.teacher-dashboard-stats small{color:#334e68;font-weight:700}
+.teacher-dashboard-stats .teacher-stat-icon:before{filter:saturate(1.2)}
