@@ -12,7 +12,7 @@ $stmt->execute($params);
 $exam = $stmt->fetch();
 if (!$exam) exit('گزارش پیدا نشد یا دسترسی ندارید.');
 
-// بهترین تلاش ثبت‌شدهٔ هر دانش‌آموز؛ revoked و تلاش‌های نیمه‌کاره صادر نمی‌شوند.
+// بهترین تلاش ثبت‌شدهٔ هر دانش‌آموز؛ تلاش لغوشده و نیمه‌کاره صادر نمی‌شود.
 $stmt = db()->prepare("SELECT a.student_id,u.full_name,a.score
     FROM attempts a
     JOIN users u ON u.id=a.student_id
@@ -33,10 +33,31 @@ $filename = 'exam_scores_' . $examId . '_' . date('Ymd_His') . '.xls';
 header('Content-Type: application/vnd.ms-excel; charset=UTF-8');
 header('Content-Disposition: attachment; filename="' . $filename . '"');
 header('Cache-Control: no-store, no-cache, must-revalidate');
-echo "\xEF\xBB\xBF";
-$cell = static fn($value) => '"' . str_replace('"', '""', (string)$value) . '"';
-echo $cell('نام دانش‌آموز') . "\t" . $cell('نمره از ' . rtrim(rtrim(number_format((float)$exam['total_score'], 2, '.', ''), '0'), '.')) . "\n";
-foreach ($rows as [$name, $score]) {
-    echo $cell($name) . "\t" . $score . "\n";
-}
-exit;
+$escape = static fn($value) => htmlspecialchars((string)$value, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+$maxScore = rtrim(rtrim(number_format((float)$exam['total_score'], 2, '.', ''), '0'), '.');
+?>
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<style>
+  table { border-collapse: collapse; direction: rtl; }
+  th, td { border: 1px solid #777; padding: 5px 10px; }
+  th { background: #e8e8e8; font-weight: bold; }
+  td.score { mso-number-format: "0.00"; text-align: center; }
+</style>
+</head>
+<body>
+<table dir="rtl">
+  <thead>
+    <tr><th>نام دانش‌آموز</th><th>نمره از <?= $escape($maxScore) ?></th></tr>
+  </thead>
+  <tbody>
+  <?php foreach ($rows as [$name, $score]): ?>
+    <tr><td><?= $escape($name) ?></td><td class="score"><?= $escape($score) ?></td></tr>
+  <?php endforeach; ?>
+  </tbody>
+</table>
+</body>
+</html>
