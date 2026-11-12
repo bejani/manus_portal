@@ -547,3 +547,9 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .teacher-dashboard-stats small{grid-column:2;grid-row:2;align-self:start;display:block;color:#334e68;font-size:.7rem;font-weight:700;line-height:1.3}
 @media(max-width:520px){.teacher-dashboard-stats .role-stat-card{grid-template-columns:28px minmax(0,1fr) auto;min-height:68px;padding:10px}.teacher-dashboard-stats .teacher-stat-icon{width:26px;height:26px}.teacher-dashboard-stats .teacher-stat-label{font-size:.74rem}.teacher-dashboard-stats strong{font-size:1.28rem}.teacher-dashboard-stats small{display:block;font-size:.64rem}}
 @media(max-width:520px){.teacher-dashboard-stats .role-stat-card small{display:block;font-size:.64rem;color:#334e68}}
+
+/* Override the global white-on-dark stat-card rule on the pale teacher dashboard cards. */
+.teacher-dashboard-stats .role-stat-card .teacher-stat-label{color:#102a43!important;text-shadow:none!important;font-weight:900}
+.teacher-dashboard-stats .role-stat-card strong{display:inline-flex!important;align-items:center;justify-content:center;min-width:46px;min-height:38px;padding:5px 10px;border:1px solid #0b1f3a;border-radius:11px;background:#102a43!important;color:#fff!important;font-size:1.55rem!important;font-weight:900;text-align:center;text-shadow:none!important;box-shadow:0 3px 8px rgba(16,42,67,.2)}
+.teacher-dashboard-stats .role-stat-card small{color:#334e68!important;text-shadow:none!important;font-weight:800}
+@media(max-width:520px){.teacher-dashboard-stats .role-stat-card strong{min-width:40px;min-height:34px;padding:4px 8px;font-size:1.28rem!important}}
