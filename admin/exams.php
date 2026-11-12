@@ -115,8 +115,8 @@ require __DIR__ . '/../partials/header.php';
     <a class="btn btn-success" href="<?= e(url('teacher/exams.php')) ?>">ساخت آزمون جدید</a>
 </div>
 
-<div class="card">
-    <form method="get" class="grid grid-4">
+<div class="card exam-filter-card">
+    <form method="get" class="grid exam-filter-form">
         <div class="form-group">
             <label for="exam-search">جست‌وجو</label>
             <input id="exam-search" name="q" value="<?= e($search) ?>" placeholder="عنوان آزمون">
@@ -157,12 +157,12 @@ require __DIR__ . '/../partials/header.php';
                 <?php endforeach; ?>
             </select>
         </div>
-        <div class="form-group" style="display:flex;align-items:end;gap:8px">
+        <div class="form-group exam-filter-actions">
             <button class="btn btn-primary" type="submit">اعمال فیلتر</button>
             <a class="btn btn-light" href="<?= e(url('admin/exams.php')) ?>">پاک‌کردن</a>
         </div>
     </form>
-    <p class="muted">تعداد آزمون‌های منطبق: <?= number_format(count($exams)) ?></p>
+    <p class="muted exam-filter-count">تعداد آزمون‌های منطبق: <?= number_format(count($exams)) ?></p>
 </div>
 
 <div class="card table-wrap">

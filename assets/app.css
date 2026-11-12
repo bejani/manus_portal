@@ -337,3 +337,17 @@ body{margin:0;background:linear-gradient(135deg,var(--bg),#edf2f9);color:var(--t
 body.page-exams{background:radial-gradient(ellipse at 8% 12%,rgba(139,92,246,.19),transparent 34%),radial-gradient(ellipse at 92% 36%,rgba(14,165,233,.15),transparent 32%),linear-gradient(135deg,#e6ddff 0%,#edf0ff 52%,#dceeff 100%)}
 body.page-exams .page-content{position:relative}
 body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px rgba(71,54,135,.10)}
+
+/* Compact, scannable filter bar for the admin exam list. */
+.exam-filter-card{padding:18px 20px;background:linear-gradient(120deg,#fff 0%,#f8f6ff 100%);border:1px solid #dcd3f5;box-shadow:0 8px 22px rgba(64,45,110,.07)}
+.exam-filter-form{display:grid;grid-template-columns:minmax(170px,1.45fr) repeat(4,minmax(105px,1fr)) auto;gap:10px;align-items:end}
+.exam-filter-form .form-group{min-width:0;margin:0}
+.exam-filter-form label{display:block;margin:0 0 4px;font-size:.78rem;font-weight:800;color:#4c3d75}
+.exam-filter-form input,.exam-filter-form select{box-sizing:border-box;width:100%;height:40px;min-width:0;padding:7px 10px;border:1px solid #d7d0e6;border-radius:10px;background:#fff;font-size:.86rem}
+.exam-filter-form input:focus,.exam-filter-form select:focus{outline:3px solid rgba(124,58,237,.14);border-color:#8b5cf6}
+.exam-filter-actions{display:flex;gap:7px;align-items:end;white-space:nowrap}
+.exam-filter-actions .btn{height:40px;display:inline-flex;align-items:center;justify-content:center;padding:0 13px}
+.exam-filter-count{margin:10px 2px 0;font-size:.8rem}
+@media(max-width:980px){.exam-filter-form{grid-template-columns:repeat(3,minmax(0,1fr))}.exam-filter-form .form-group:first-child{grid-column:span 2}.exam-filter-actions{grid-column:span 1}}
+@media(max-width:640px){.exam-filter-card{padding:15px}.exam-filter-form{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.exam-filter-form .form-group:first-child{grid-column:span 2}.exam-filter-actions{grid-column:span 2}.exam-filter-actions .btn{flex:1}}
+@media(max-width:380px){.exam-filter-form{grid-template-columns:1fr}.exam-filter-form .form-group:first-child,.exam-filter-actions{grid-column:1}}
