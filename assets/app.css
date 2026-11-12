@@ -421,3 +421,5 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .bank-thermometer-chapter-inactive{font-size:.61rem}
 .bank-thermometer-empty.subject-empty{padding:7px;font-size:.76rem}
 @media(max-width:700px){.bank-thermometer{padding:14px}.bank-thermometer-grid{max-height:380px;grid-template-columns:1fr}}
+
+.bank-thermometer-inactive.subject-inactive{background:#f1f5f9;color:#475569}
