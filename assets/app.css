@@ -393,3 +393,31 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .bank-thermometer-chapter-inactive{display:block;margin-top:2px;color:#b45309;font-size:.66rem}
 .bank-thermometer-empty{padding:18px;border:1px dashed #d8cfee;border-radius:12px;background:rgba(255,255,255,.7);color:#64748b;text-align:center;font-size:.85rem}.bank-thermometer-empty.subject-empty{padding:10px}
 @media(max-width:700px){.bank-thermometer{padding:16px;border-radius:16px}.bank-thermometer-head{align-items:flex-start;flex-direction:column}.bank-thermometer-total{align-self:flex-start}.bank-thermometer-grid{max-height:450px;grid-template-columns:1fr}}
+
+/* Compact, colorful card treatment for the bank inventory thermometer. */
+.bank-thermometer{padding:17px 18px;margin-bottom:15px;border-radius:17px}
+.bank-thermometer-head{padding-bottom:11px}
+.bank-thermometer-head h2{font-size:1.18rem}
+.bank-thermometer-head p{font-size:.76rem}
+.bank-thermometer-total{padding:7px 11px;border-radius:12px}
+.bank-thermometer-total strong{font-size:1.3rem}
+.bank-thermometer-stats{gap:7px;margin:9px 0 11px}
+.bank-thermometer-stats>div{padding:3px 8px;border-radius:9px}
+.bank-thermometer-grid{grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:9px;max-height:440px;padding:2px 3px 3px 2px}
+.bank-thermometer-subject{position:relative;padding:10px 12px 11px;border-radius:13px;box-shadow:0 3px 10px rgba(30,20,65,.04);transition:transform .16s ease,box-shadow .16s ease}
+.bank-thermometer-subject:hover{transform:translateY(-1px);box-shadow:0 7px 16px rgba(30,20,65,.08)}
+.bank-thermometer-subject:before{position:absolute;inset:0 0 auto;height:3px;border-radius:13px 13px 0 0;background:linear-gradient(90deg,#8b5cf6,#c4b5fd);content:""}
+.bank-thermometer-subject:nth-child(4n+2):before{background:linear-gradient(90deg,#0891b2,#67e8f9)}
+.bank-thermometer-subject:nth-child(4n+3):before{background:linear-gradient(90deg,#059669,#6ee7b7)}
+.bank-thermometer-subject:nth-child(4n):before{background:linear-gradient(90deg,#d97706,#fcd34d)}
+.bank-thermometer-subject-head{align-items:center;margin-bottom:8px;padding:2px 0 7px}
+.bank-thermometer-subject-head h3{font-size:.88rem;line-height:1.5}
+.bank-thermometer-subject-head small{display:inline-block;margin-top:1px;padding:1px 7px;border-radius:999px;background:#f3efff;color:#5b21b6;font-size:.68rem;font-weight:800}
+.bank-thermometer-inactive{padding:2px 7px;font-size:.63rem}
+.bank-thermometer-chapters{gap:6px}
+.bank-thermometer-label{margin-bottom:2px;font-size:.71rem}
+.bank-thermometer-label strong{min-width:23px;font-size:.73rem}
+.bank-thermometer-track{height:6px}
+.bank-thermometer-chapter-inactive{font-size:.61rem}
+.bank-thermometer-empty.subject-empty{padding:7px;font-size:.76rem}
+@media(max-width:700px){.bank-thermometer{padding:14px}.bank-thermometer-grid{max-height:380px;grid-template-columns:1fr}}
