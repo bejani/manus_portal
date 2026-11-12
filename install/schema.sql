@@ -55,6 +55,13 @@ CREATE TABLE class_subjects (
   INDEX idx_class_subjects_teacher (teacher_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE teacher_classes (
+  teacher_id INT UNSIGNED NOT NULL,
+  class_id INT UNSIGNED NOT NULL,
+  assigned_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (teacher_id, class_id),
+  INDEX idx_teacher_classes_class (class_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 CREATE TABLE exams (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   subject_id INT UNSIGNED NOT NULL,
