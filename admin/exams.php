@@ -201,13 +201,14 @@ require __DIR__ . '/../partials/header.php';
 <div class="card table-wrap">
     <table class="table">
         <thead>
-            <tr><th>آزمون</th><th>درس / کلاس</th><th>معلم</th><th>پرسش</th><th>تلاش</th><th>وضعیت</th><th>بایگانی</th><th>عملیات</th></tr>
+            <tr><?php if (count($exams) > 10): ?><th>ردیف</th><?php endif; ?><th>آزمون</th><th>درس / کلاس</th><th>معلم</th><th>پرسش</th><th>تلاش</th><th>وضعیت</th><th>بایگانی</th><th>عملیات</th></tr>
         </thead>
         <tbody>
         <?php if (!$exams): ?>
-            <tr><td colspan="8" class="muted text-center">آزمونی با این فیلترها پیدا نشد.</td></tr>
-        <?php else: foreach ($exams as $exam): ?>
+            <tr><td colspan="<?= count($exams) > 10 ? 9 : 8 ?>" class="muted text-center">آزمونی با این فیلترها پیدا نشد.</td></tr>
+        <?php else: foreach ($exams as $rowIndex => $exam): ?>
             <tr>
+                <?php if (count($exams) > 10): ?><td><?= number_format($rowIndex + 1) ?></td><?php endif; ?>
                 <td><strong><?= e($exam['title']) ?></strong><br><small class="muted">نمره کل: <?= format_score($exam['total_score']) ?> — <?= e($exam['created_at']) ?></small></td>
                 <td><?= e($exam['subject_title'] ?? 'بدون درس') ?> / <?= e($exam['class_title'] ?? 'بدون کلاس') ?></td>
                 <td><?= e($exam['teacher_name'] ?? '—') ?></td>
