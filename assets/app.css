@@ -452,3 +452,17 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 @keyframes examModalRise{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
 @media(max-width:560px){.exam-submit-modal{padding:14px}.exam-submit-dialog{padding:24px 18px 18px;border-radius:20px}.exam-submit-dialog h2{font-size:1.15rem}.exam-submit-actions{flex-direction:column-reverse}.exam-submit-actions .btn{width:100%}}
 @media(prefers-reduced-motion:reduce){.exam-submit-dialog,.exam-submit-backdrop{animation:none}.exam-submit-actions #examSubmitContinue{transition:none}}
+
+/* Live remaining-time indicator and elevated risk styling for final confirmation. */
+.exam-submit-timer{display:flex;align-items:center;justify-content:space-between;gap:12px;max-width:360px;margin:15px auto 0;padding:9px 13px;border:1px solid #c7d2fe;border-radius:12px;background:linear-gradient(100deg,#eef2ff,#f5f3ff);color:#4338ca;text-align:right}
+.exam-submit-timer span{font-size:.78rem;font-weight:700}.exam-submit-timer strong{direction:rtl;white-space:nowrap;font-size:.9rem;font-variant-numeric:tabular-nums}
+.exam-submit-timer.is-urgent{border-color:#fdba74;background:#fff7ed;color:#c2410c}.exam-submit-timer.is-expired{border-color:#fca5a5;background:#fef2f2;color:#b91c1c}
+.exam-submit-modal.is-danger .exam-submit-backdrop{background:rgba(69,10,10,.76)}
+.exam-submit-modal.is-danger .exam-submit-dialog{border-color:#fecaca;background:radial-gradient(circle at 50% 0%,rgba(254,226,226,.8),transparent 42%),linear-gradient(145deg,#fff 0%,#fff7ed 55%,#fff1f2 100%);box-shadow:0 30px 95px rgba(127,29,29,.38)}
+.exam-submit-modal.is-danger .exam-submit-icon{border-color:#fca5a5;background:linear-gradient(145deg,#fee2e2,#ffedd5);color:#b91c1c;box-shadow:0 8px 24px rgba(220,38,38,.18)}
+.exam-submit-modal.is-danger .exam-submit-step{border-color:#fecaca;background:#fff1f2;color:#b91c1c}
+.exam-submit-modal.is-danger .exam-submit-dialog h2{color:#7f1d1d}
+.exam-submit-modal.is-danger .exam-submit-summary{border-color:#fca5a5;background:linear-gradient(90deg,#fef2f2,#fff7ed);color:#991b1b}
+.exam-submit-modal.is-danger .exam-submit-summary strong{color:#b91c1c}
+.exam-submit-modal.is-danger .exam-submit-summary .exam-submit-lock{background:#fee2e2;color:#b91c1c}
+.exam-submit-modal.is-danger .exam-submit-actions #examSubmitContinue{background:linear-gradient(135deg,#dc2626,#ea580c);box-shadow:0 8px 20px rgba(220,38,38,.28)}
