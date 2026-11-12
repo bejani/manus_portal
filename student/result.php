@@ -28,9 +28,13 @@ if ($viewerRole === 'student') {
 } else {
     $attemptsRemaining = 0;
 }
-$s = db()->prepare('SELECT q.question_text,q.chapter,q.score,q.question_type,a.answer_text,a.is_correct,a.awarded_score,a.teacher_comment,o.option_text selected_text FROM answers a JOIN questions q ON q.id=a.question_id LEFT JOIN question_options o ON o.id=a.selected_option_id WHERE a.attempt_id=? ORDER BY q.sort_order');
+$s = db()->prepare('SELECT q.id question_id,q.question_text,q.chapter,q.score,q.question_type,a.answer_text,a.is_correct,a.awarded_score,a.teacher_comment,o.option_text selected_text FROM answers a JOIN questions q ON q.id=a.question_id LEFT JOIN question_options o ON o.id=a.selected_option_id WHERE a.attempt_id=?');
 $s->execute([$aid]);
 $answers = $s->fetchAll();
+// Keep answer review in exactly the same deterministic per-attempt order shown during the exam.
+$attemptStudentId=(int)$attempt['student_id'];$attemptExamId=(int)$attempt['exam_id'];$attemptNo=(int)($attempt['attempt_no']??1);
+$answerRank=static fn($questionId)=>hash('sha256',$attemptStudentId.'|'.$attemptExamId.'|'.$attemptNo.'|'.$questionId);
+usort($answers,static fn($a,$b)=>strcmp($answerRank((int)$a['question_id']),$answerRank((int)$b['question_id'])));
 $correct = 0; $answered = 0; $pendingReview = 0; $chapterStats = [];
 $typeStats = ['mcq'=>['total'=>0,'earned'=>0,'max'=>0],'true_false'=>['total'=>0,'earned'=>0,'max'=>0],'short'=>['total'=>0,'earned'=>0,'max'=>0]];
 foreach ($answers as $answer) {
