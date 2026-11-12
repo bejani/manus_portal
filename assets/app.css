@@ -515,3 +515,19 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .teacher-dashboard-stats .teacher-stat-published,.teacher-dashboard-stats .teacher-stat-questions,.teacher-dashboard-stats .teacher-stat-attempts{border-top-color:#d7dee7}
 @media(max-width:850px){.teacher-subject-panel{padding:18px}.teacher-dashboard-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:520px){.teacher-subject-heading{align-items:flex-start}.teacher-subject-grid{grid-template-columns:1fr}.teacher-dashboard-stats .role-stat-card{grid-template-columns:24px 1fr auto;padding:8px}.teacher-dashboard-stats .role-stat-card small{display:none}}
+
+/* Keep secondary teacher metrics compact but clearly visible instead of washed out. */
+.teacher-dashboard-stats{opacity:1}
+.teacher-dashboard-stats>.role-stat-card{border-color:#d6e1e8;box-shadow:0 3px 10px rgba(15,23,42,.045)}
+.teacher-dashboard-stats>.role-stat-card:nth-child(1){border-top-color:#0f766e;background:linear-gradient(120deg,#e5f7f2,#f2fbf8)}
+.teacher-dashboard-stats>.role-stat-card:nth-child(2){border-top-color:#2563eb;background:linear-gradient(120deg,#eaf2ff,#f5f8ff)}
+.teacher-dashboard-stats>.role-stat-card:nth-child(3){border-top-color:#7c3aed;background:linear-gradient(120deg,#f1eaff,#faf7ff)}
+.teacher-dashboard-stats>.role-stat-card:nth-child(4){border-top-color:#c2410c;background:linear-gradient(120deg,#fff0e2,#fff9f2)}
+.teacher-dashboard-stats .teacher-stat-label{color:#334155;font-weight:800}
+.teacher-dashboard-stats strong{color:#172b42}
+.teacher-dashboard-stats small{color:#52677a}
+.teacher-dashboard-stats .teacher-stat-icon{border-color:#cbd5e1;background:rgba(255,255,255,.75);opacity:.95}
+.teacher-dashboard-stats>.role-stat-card:nth-child(1) .teacher-stat-icon:before{color:#0f766e}
+.teacher-dashboard-stats>.role-stat-card:nth-child(2) .teacher-stat-icon:before{color:#1d4ed8}
+.teacher-dashboard-stats>.role-stat-card:nth-child(3) .teacher-stat-icon:before{color:#6d28d9}
+.teacher-dashboard-stats>.role-stat-card:nth-child(4) .teacher-stat-icon:before{color:#c2410c}
