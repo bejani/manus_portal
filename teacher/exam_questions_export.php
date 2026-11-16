@@ -7,7 +7,7 @@ $examId = get_int('exam_id');
 $ownerFilter = current_user()['role'] === 'admin' ? '' : ' AND e.created_by=?';
 $params = current_user()['role'] === 'admin' ? [$examId] : [$examId, $uid];
 
-$examStmt = db()->prepare("SELECT e.id,e.title FROM exams e WHERE e.id=?$ownerFilter");
+$examStmt = db()->prepare("SELECT e.id,e.title,e.random_per_student FROM exams e WHERE e.id=?$ownerFilter");
 $examStmt->execute($params);
 $exam = $examStmt->fetch();
 if (!$exam) {
@@ -15,8 +15,13 @@ if (!$exam) {
     exit('گزارش پیدا نشد یا دسترسی ندارید.');
 }
 
-$stmt = db()->prepare('SELECT q.question_text,q.chapter,q.question_type,COUNT(a.id) responses,SUM(CASE WHEN a.is_correct=1 THEN 1 ELSE 0 END) correct_count FROM questions q LEFT JOIN answers a ON a.question_id=q.id LEFT JOIN attempts at ON at.id=a.attempt_id AND at.exam_id=? WHERE q.exam_id=? GROUP BY q.id,q.question_text,q.chapter,q.question_type,q.sort_order ORDER BY q.sort_order,q.id');
-$stmt->execute([$examId, $examId]);
+if ((int)($exam['random_per_student'] ?? 0) === 1) {
+    $stmt = db()->prepare('SELECT MIN(q.id) id,q.question_text,q.chapter,q.question_type,COUNT(a.id) responses,SUM(CASE WHEN a.is_correct=1 THEN 1 ELSE 0 END) correct_count FROM questions q LEFT JOIN answers a ON a.question_id=q.id WHERE q.exam_id=? AND EXISTS (SELECT 1 FROM attempt_questions aq WHERE aq.question_id=q.id) GROUP BY COALESCE(q.bank_question_id,q.id),q.question_text,q.chapter,q.question_type ORDER BY MIN(q.sort_order),MIN(q.id)');
+    $stmt->execute([$examId]);
+} else {
+    $stmt = db()->prepare('SELECT q.question_text,q.chapter,q.question_type,COUNT(a.id) responses,SUM(CASE WHEN a.is_correct=1 THEN 1 ELSE 0 END) correct_count FROM questions q LEFT JOIN answers a ON a.question_id=q.id LEFT JOIN attempts at ON at.id=a.attempt_id AND at.exam_id=? WHERE q.exam_id=? GROUP BY q.id,q.question_text,q.chapter,q.question_type,q.sort_order ORDER BY q.sort_order,q.id');
+    $stmt->execute([$examId, $examId]);
+}
 $questions = $stmt->fetchAll();
 $labels = ['mcq'=>'چهارگزینه‌ای','true_false'=>'صحیح/غلط','short'=>'پاسخ کوتاه'];
 

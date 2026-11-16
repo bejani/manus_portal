@@ -14,7 +14,7 @@ $summary = [
     'pending_short' => (int) db()->query("SELECT COUNT(*) FROM answers a JOIN questions q ON q.id=a.question_id JOIN attempts at ON at.id=a.attempt_id WHERE q.question_type='short' AND a.awarded_score IS NULL AND at.revoked_at IS NULL")->fetchColumn(),
 ];
 $avgScore = (float) (db()->query("SELECT COALESCE(AVG(percentage),0) FROM attempts WHERE status IN ('submitted','reviewed') AND revoked_at IS NULL")->fetchColumn() ?: 0);
-$recentStmt = db()->query("SELECT e.id,e.title,e.status,e.created_at,s.title subject_title,c.title class_title,(SELECT COUNT(*) FROM questions q WHERE q.exam_id=e.id) question_count,(SELECT COUNT(*) FROM attempts a WHERE a.exam_id=e.id AND a.revoked_at IS NULL) attempt_count FROM exams e LEFT JOIN subjects s ON s.id=e.subject_id LEFT JOIN classes c ON c.id=e.class_id WHERE e.archived_at IS NULL ORDER BY e.id DESC LIMIT 8");
+$recentStmt = db()->query("SELECT e.id,e.title,e.status,e.created_at,s.title subject_title,c.title class_title,CASE WHEN e.random_per_student=1 THEN e.random_easy_count+e.random_medium_count+e.random_hard_count ELSE (SELECT COUNT(*) FROM questions q WHERE q.exam_id=e.id) END question_count,(SELECT COUNT(*) FROM attempts a WHERE a.exam_id=e.id AND a.revoked_at IS NULL) attempt_count FROM exams e LEFT JOIN subjects s ON s.id=e.subject_id LEFT JOIN classes c ON c.id=e.class_id WHERE e.archived_at IS NULL ORDER BY e.id DESC LIMIT 8");
 $recentExams = $recentStmt->fetchAll();
 $title = 'داشبورد مدیر';
 require __DIR__ . '/../partials/header.php';

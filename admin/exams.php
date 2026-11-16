@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../lib/bootstrap.php';
+require_once __DIR__ . '/../lib/exam_randomizer.php';
 require_role('admin');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -35,10 +36,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'status' && $id > 0) {
         $status = post_string('status');
         if (in_array($status, ['draft', 'published', 'closed'], true)) {
-            $s = db()->prepare('UPDATE exams SET status=? WHERE id=?');
-            $s->execute([$status, $id]);
-            audit('change_exam_status', 'exam', $id);
-            flash('success', 'وضعیت آزمون تغییر کرد.');
+            $examStmt = db()->prepare('SELECT * FROM exams WHERE id=?');
+            $examStmt->execute([$id]);
+            $targetExam = $examStmt->fetch();
+            $inventoryError = $status === 'published' && $targetExam ? prepare_random_exam_question_pool(db(), $targetExam) : null;
+            if (!$targetExam) {
+                flash('error', 'آزمون پیدا نشد.');
+            } elseif ($inventoryError !== null) {
+                flash('error', $inventoryError);
+            } else {
+                $s = db()->prepare('UPDATE exams SET status=? WHERE id=?');
+                $s->execute([$status, $id]);
+                audit('change_exam_status', 'exam', $id);
+                flash('success', 'وضعیت آزمون تغییر کرد.');
+            }
         }
     }
 
@@ -51,21 +62,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $exam = $s->fetch();
             if (!$exam) throw new RuntimeException('آزمون پیدا نشد.');
 
-            $copy = $pdo->prepare('INSERT INTO exams(subject_id,class_id,title,instructions,duration_minutes,total_score,starts_at,ends_at,status,created_by) VALUES(?,?,?,?,?,?,?,?,?,?)');
-            $copy->execute([$exam['subject_id'], $exam['class_id'], $exam['title'] . ' - کپی', $exam['instructions'], $exam['duration_minutes'], $exam['total_score'], null, null, 'draft', current_user()['id']]);
+            $copy = $pdo->prepare('INSERT INTO exams(subject_id,chapter,random_per_student,random_easy_count,random_medium_count,random_hard_count,class_id,title,instructions,duration_minutes,total_score,starts_at,ends_at,status,created_by) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)');
+            $copy->execute([$exam['subject_id'], $exam['chapter'] ?? null, (int)($exam['random_per_student'] ?? 0), (int)($exam['random_easy_count'] ?? 0), (int)($exam['random_medium_count'] ?? 0), (int)($exam['random_hard_count'] ?? 0), $exam['class_id'], $exam['title'] . ' - کپی', $exam['instructions'], $exam['duration_minutes'], $exam['total_score'], null, null, 'draft', current_user()['id']]);
             $newId = (int)$pdo->lastInsertId();
 
-            $qs = $pdo->prepare('SELECT * FROM questions WHERE exam_id=? ORDER BY sort_order,id');
-            $qs->execute([$id]);
-            $qInsert = $pdo->prepare('INSERT INTO questions(exam_id,question_text,question_type,score,sort_order,feedback,reference_answer,rubric) VALUES(?,?,?,?,?,?,?,?)');
-            $oSelect = $pdo->prepare('SELECT * FROM question_options WHERE question_id=? ORDER BY sort_order,id');
-            $oInsert = $pdo->prepare('INSERT INTO question_options(question_id,option_text,option_key,is_correct,sort_order) VALUES(?,?,?,?,?)');
-            foreach ($qs as $q) {
-                $qInsert->execute([$newId, $q['question_text'], $q['question_type'], $q['score'], $q['sort_order'], $q['feedback'], $q['reference_answer'] ?? null, $q['rubric'] ?? null]);
-                $newQ = (int)$pdo->lastInsertId();
-                $oSelect->execute([$q['id']]);
-                foreach ($oSelect as $o) {
-                    $oInsert->execute([$newQ, $o['option_text'], $o['option_key'], $o['is_correct'], $o['sort_order']]);
+            if ((int)($exam['random_per_student'] ?? 0) !== 1) {
+                $qs = $pdo->prepare('SELECT * FROM questions WHERE exam_id=? ORDER BY sort_order,id');
+                $qs->execute([$id]);
+                $qInsert = $pdo->prepare('INSERT INTO questions(exam_id,bank_question_id,question_text,chapter,image_path,question_type,score,sort_order,difficulty,tags,feedback,reference_answer,rubric) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)');
+                $oSelect = $pdo->prepare('SELECT * FROM question_options WHERE question_id=? ORDER BY sort_order,id');
+                $oInsert = $pdo->prepare('INSERT INTO question_options(question_id,option_text,image_path,option_key,is_correct,sort_order) VALUES(?,?,?,?,?,?)');
+                foreach ($qs as $q) {
+                    $qInsert->execute([$newId, $q['bank_question_id'] ?? null, $q['question_text'], $q['chapter'] ?? null, $q['image_path'] ?? null, $q['question_type'], $q['score'], $q['sort_order'], $q['difficulty'] ?? 'medium', $q['tags'] ?? null, $q['feedback'] ?? null, $q['reference_answer'] ?? null, $q['rubric'] ?? null]);
+                    $newQ = (int)$pdo->lastInsertId();
+                    $oSelect->execute([$q['id']]);
+                    foreach ($oSelect as $o) {
+                        $oInsert->execute([$newQ, $o['option_text'], $o['image_path'] ?? null, $o['option_key'], $o['is_correct'], $o['sort_order']]);
+                    }
                 }
             }
             $pdo->commit();
@@ -113,7 +126,7 @@ if ($status !== '') {
 }
 
 $sql = 'SELECT e.id,e.title,e.status,e.total_score,e.created_at,e.archived_at,s.title subject_title,c.title class_title,u.full_name teacher_name,
-        (SELECT COUNT(*) FROM questions q WHERE q.exam_id=e.id) question_count,
+        CASE WHEN e.random_per_student=1 THEN e.random_easy_count+e.random_medium_count+e.random_hard_count ELSE (SELECT COUNT(*) FROM questions q WHERE q.exam_id=e.id) END question_count,
         (SELECT COUNT(*) FROM attempts a WHERE a.exam_id=e.id) attempt_count
         FROM exams e
         LEFT JOIN subjects s ON s.id=e.subject_id

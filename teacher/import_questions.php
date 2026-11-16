@@ -7,6 +7,7 @@ $s = db()->prepare('SELECT e.*,s.title subject_title,c.title class_title FROM ex
 $s->execute([$examId]);
 $exam = $s->fetch();
 if (!$exam) exit('آزمون پیدا نشد.');
+if ((int)($exam['random_per_student']??0)===1) { flash('error','این آزمون به‌صورت تصادفی از بانک سؤال می‌گیرد؛ فایل را به بانک سؤال وارد کنید، نه فهرست ثابت آزمون.'); redirect('teacher/exams.php?id='.$examId); }
 $errors = [];
 $imported = 0;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
