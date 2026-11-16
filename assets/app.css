@@ -605,3 +605,23 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .bank-thermometer-level-counts .thermo-level-medium{border-color:#fde68a;background:#fffbeb;color:#a16207}
 .bank-thermometer-level-counts .thermo-level-hard{border-color:#ddd6fe;background:#f5f3ff;color:#6d28d9}
 .bank-thermometer-level-counts.chapter-level-counts{margin:4px 0 1px}
+
+/* Collapsible question-bank thermometer: native details/summary supports click and keyboard. */
+.bank-thermometer{overflow:hidden}
+.bank-thermometer-toggle{display:flex;align-items:center;justify-content:space-between;gap:14px;list-style:none;cursor:pointer}
+.bank-thermometer-toggle::-webkit-details-marker{display:none}
+.bank-thermometer-toggle:focus-visible{outline:3px solid #7c3aed;outline-offset:4px;border-radius:12px}
+.bank-thermometer-toggle-copy{display:block;min-width:0}
+.bank-thermometer-title{display:block;margin:2px 0;color:#30205f;font-size:1.18rem;font-weight:900;line-height:1.35}
+.bank-thermometer-toggle-side{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap}
+.bank-thermometer-toggle-action{display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid #d8cff0;border-radius:10px;background:#fff;color:#4c1d95;font-size:.72rem;font-weight:800;white-space:nowrap;transition:background .16s ease,border-color .16s ease}
+.bank-thermometer-toggle:hover .bank-thermometer-toggle-action{background:#f5f3ff;border-color:#a78bfa}
+.bank-thermometer-close-label{display:none}
+.bank-thermometer[open] .bank-thermometer-open-label{display:none}
+.bank-thermometer[open] .bank-thermometer-close-label{display:inline}
+.bank-thermometer-chevron{transition:transform .18s ease}
+.bank-thermometer[open] .bank-thermometer-chevron{transform:rotate(180deg)}
+.bank-thermometer-content{padding-top:12px}
+.bank-thermometer-description{margin:0 0 8px;font-size:.76rem}
+@media(max-width:700px){.bank-thermometer-toggle{align-items:flex-start;flex-wrap:wrap}.bank-thermometer-toggle-side{width:100%;justify-content:space-between}.bank-thermometer-title{font-size:1.05rem}}
+@media(prefers-reduced-motion:reduce){.bank-thermometer-toggle-action,.bank-thermometer-chevron{transition:none}}
