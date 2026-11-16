@@ -374,10 +374,9 @@ function parse_paragraph_mcq_docx(string $path, float $score = 1): array
 
         if (preg_match('/^[1-4]$/', $normalized)) {
             if (count($block) < 5) {
-                $errors[] = 'پرسش ' . $questionNo . ': برای هر سؤال باید متن سؤال، چهار گزینه و شمارهٔ پاسخ صحیح درج شود (خط ' . ($lineNo + 1) . ').';
-                $block = [];
-                $difficulty = 'medium';
-                $questionNo++;
+                // عدد تنها ممکن است بخشی از صورت سؤال یا متن گزینه باشد.
+                // پیش از وجود سؤال و چهار گزینه، آن را پاسخ نهایی فرض نکن.
+                $block[] = $line;
                 continue;
             }
 
@@ -385,12 +384,21 @@ function parse_paragraph_mcq_docx(string $path, float $score = 1): array
             // گزینه محسوب می‌شوند و متنِ قبل از آن‌ها صورت سؤال است.
             $questionLines = array_slice($block, 0, -4);
             $optionLines = array_slice($block, -4);
+            $labelledOptionTexts = [];
+            foreach ($optionLines as $index => $optionLine) {
+                $labelledOptionTexts[] = paragraph_mcq_option($optionLine, $index + 1);
+            }
+            // گزینهٔ بدون برچسب ممکن است با A/B/C/D یا حرف مشابه شروع شود؛
+            // فقط وقتی هر چهار گزینه برچسب ترتیبی دارند، برچسب‌ها را حذف کن.
+            $hasConsistentLabels = count(array_filter(
+                $labelledOptionTexts,
+                static fn($optionText) => $optionText !== null
+            )) === 4;
             $optionTexts = [];
-            $labelledOptions = paragraph_mcq_option($optionLines[0], 1) !== null;
 
             foreach ($optionLines as $index => $optionLine) {
-                $optionText = $labelledOptions
-                    ? paragraph_mcq_option($optionLine, $index + 1)
+                $optionText = $hasConsistentLabels
+                    ? $labelledOptionTexts[$index]
                     : trim($optionLine);
 
                 if ($optionText === null || trim($optionText) === '') {
