@@ -325,146 +325,114 @@ function normalize_mcq_question_text(string $text): string
 }
 
 /**
- * پارسر اصلی قالب پاراگرافی MCQ:
+ * پارسر قالب DOCX چهارگزینه‌ای:
  *
- * سؤال
- * ( الف گزینه اول
- * ( ب گزینه دوم
- * ( ج گزینه سوم
- * ( د گزینه چهارم
- * 3
+ * 0 (آسان) / 1 (متوسط) / 2 (دشوار)
+ * متن سؤال در یک یا چند پاراگراف
+ * چهار خط گزینهٔ بدون برچسب
+ * شمارهٔ پاسخ صحیح از 1 تا 4
  *
- * هر گزینه و پاسخ می‌تواند با Enter یا Shift+Enter از خط قبلی جدا شده باشد.
+ * برای سازگاری با فایل‌های قدیمی، چهار گزینهٔ برچسب‌دار الف/ب/ج/د
+ * یا A/B/C/D نیز پذیرفته می‌شوند؛ دشواریِ حذف‌شده در فایل قدیمی متوسط است.
  */
 function parse_paragraph_mcq_docx(string $path, float $score = 1): array
 {
-    $lines = docx_paragraphs($path);
+    $sourceLines = docx_paragraphs($path);
+    $lines = [];
 
-    $questions = [];
-    $errors = [];
-
-    $questionText = [];
-    $options = [];
-
-    $state = 'question';
-    $questionNo = 1;
-    $optionNo = 1;
-
-    foreach ($lines as $lineNo => $raw) {
-        $lineNumber = $lineNo + 1;
-
-        $line = trim(preg_replace('/\x{FEFF}/u', '', $raw) ?? '');
-
-        if ($line === '') {
-            continue;
-        }
-
-        if ($state === 'question') {
-            $first = paragraph_mcq_option($line, 1);
-
-            if ($first !== null) {
-                if (!$questionText) {
-                    $errors[] = "پرسش {$questionNo}: متن سؤال خالی است.";
-                }
-
-                $options = ['A' => $first];
-                $optionNo = 2;
-                $state = 'options';
-            } else {
-                $questionText[] = $line;
-            }
-
-            continue;
-        }
-
-        if ($state === 'options') {
-            $key = ['A', 'B', 'C', 'D'][$optionNo - 1];
-            $value = paragraph_mcq_option($line, $optionNo);
-
-            if ($value === null) {
-                $errors[] =
-                    "پرسش {$questionNo}: گزینهٔ شمارهٔ {$optionNo} " .
-                    "در پاراگراف {$lineNumber} پیدا نشد.";
-
-                $state = 'invalid';
-            } else {
-                $options[$key] = $value;
-
-                if ($optionNo === 4) {
-                    $state = 'answer';
-                } else {
-                    $optionNo++;
-                }
-            }
-
-            continue;
-        }
-
-        if ($state === 'answer') {
-            $answer = normalize_docx_digits($line);
-            $answer = trim($answer);
-
-            if (!preg_match('/^[1-4]$/', $answer)) {
-                $errors[] =
-                    "پرسش {$questionNo}: پاسخ صحیح باید عددی بین ۱ تا ۴ باشد؛ " .
-                    "خط {$lineNumber} مقدار «{$line}» دارد.";
-
-                $state = 'invalid';
-            } else {
-                $questions[] = [
-                    'type' => 'MCQ',
-                    'score' => $score,
-                    'text' => normalize_mcq_question_text(
-                        implode(' ', $questionText)
-                    ),
-                    'options' => [
-                        'A' => $options['A'] ?? '',
-                        'B' => $options['B'] ?? '',
-                        'C' => $options['C'] ?? '',
-                        'D' => $options['D'] ?? ''
-                    ],
-                    'answer' => [
-                        '1' => 'A',
-                        '2' => 'B',
-                        '3' => 'C',
-                        '4' => 'D'
-                    ][$answer],
-                    'feedback' => '',
-                    'reference_answer' => '',
-                    'rubric' => ''
-                ];
-
-                $questionNo++;
-                $questionText = [];
-                $options = [];
-                $state = 'question';
-                $optionNo = 1;
-            }
-
-            continue;
-        }
-
-        if ($state === 'invalid') {
-            /*
-             * بعد از خطای یک سؤال، تا پیدا شدن گزینهٔ «الف» سؤال بعدی
-             * ادامه می‌دهیم تا خطاهای بعدی نیز قابل گزارش باشند.
-             */
-            $first = paragraph_mcq_option($line, 1);
-
-            if ($first !== null) {
-                $questionText = [];
-                $options = ['A' => $first];
-                $optionNo = 2;
-                $state = 'options';
-
-                $questionNo++;
+    // پشتیبانی از Enter (پاراگراف جدا) و Shift+Enter (شکست خط در یک پاراگراف).
+    foreach ($sourceLines as $sourceLine) {
+        foreach (preg_split('/\R/u', (string) $sourceLine) ?: [(string) $sourceLine] as $part) {
+            $line = trim(preg_replace('/\x{FEFF}/u', '', $part) ?? '');
+            if ($line !== '') {
+                $lines[] = $line;
             }
         }
     }
 
-    if ($state !== 'question') {
-        $errors[] =
-            "پرسش {$questionNo}: بلوک سؤال ناقص است و گزینه‌ها یا پاسخ صحیح کامل نیستند.";
+    $difficultyCodes = [
+        '0' => 'easy',
+        '1' => 'medium',
+        '2' => 'hard',
+    ];
+    $answerKeys = ['1' => 'A', '2' => 'B', '3' => 'C', '4' => 'D'];
+    $questions = [];
+    $errors = [];
+    $block = [];
+    $difficulty = 'medium';
+    $questionNo = 1;
+
+    foreach ($lines as $lineNo => $line) {
+        $normalized = trim(normalize_docx_digits($line));
+
+        // در قالب جدید، کد سطح دشواری اولین پاراگراف هر سؤال است.
+        // در قالب قدیمی که این کد را ندارد، مقدار پیش‌فرض متوسط حفظ می‌شود.
+        if (!$block && isset($difficultyCodes[$normalized])) {
+            $difficulty = $difficultyCodes[$normalized];
+            continue;
+        }
+
+        if (preg_match('/^[1-4]$/', $normalized)) {
+            if (count($block) < 5) {
+                $errors[] = 'پرسش ' . $questionNo . ': برای هر سؤال باید متن سؤال، چهار گزینه و شمارهٔ پاسخ صحیح درج شود (خط ' . ($lineNo + 1) . ').';
+                $block = [];
+                $difficulty = 'medium';
+                $questionNo++;
+                continue;
+            }
+
+            // چون گزینه‌های قالب جدید بدون برچسب‌اند، چهار خطِ پیش از پاسخ
+            // گزینه محسوب می‌شوند و متنِ قبل از آن‌ها صورت سؤال است.
+            $questionLines = array_slice($block, 0, -4);
+            $optionLines = array_slice($block, -4);
+            $optionTexts = [];
+            $labelledOptions = paragraph_mcq_option($optionLines[0], 1) !== null;
+
+            foreach ($optionLines as $index => $optionLine) {
+                $optionText = $labelledOptions
+                    ? paragraph_mcq_option($optionLine, $index + 1)
+                    : trim($optionLine);
+
+                if ($optionText === null || trim($optionText) === '') {
+                    $errors[] = 'پرسش ' . $questionNo . ': گزینهٔ ' . ($index + 1) . ' خالی است یا برچسب آن با ترتیب مورد انتظار مطابقت ندارد.';
+                    $optionTexts = [];
+                    break;
+                }
+                $optionTexts[] = trim($optionText);
+            }
+
+            if (!$questionLines) {
+                $errors[] = 'پرسش ' . $questionNo . ': متن سؤال خالی است.';
+            } elseif (count($optionTexts) === 4) {
+                $questions[] = [
+                    'type' => 'MCQ',
+                    'score' => $score,
+                    'difficulty' => $difficulty,
+                    'text' => normalize_mcq_question_text(implode(' ', $questionLines)),
+                    'options' => [
+                        'A' => $optionTexts[0],
+                        'B' => $optionTexts[1],
+                        'C' => $optionTexts[2],
+                        'D' => $optionTexts[3],
+                    ],
+                    'answer' => $answerKeys[$normalized],
+                    'feedback' => '',
+                    'reference_answer' => '',
+                    'rubric' => '',
+                ];
+            }
+
+            $block = [];
+            $difficulty = 'medium';
+            $questionNo++;
+            continue;
+        }
+
+        $block[] = $line;
+    }
+
+    if ($block) {
+        $errors[] = 'پرسش ' . $questionNo . ': بلوک سؤال ناقص است؛ سطح دشواری (در صورت استفاده)، متن سؤال، چهار گزینه و پاسخ عددی را بررسی کنید.';
     }
 
     return [$questions, $errors];
