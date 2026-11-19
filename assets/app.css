@@ -423,6 +423,12 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 @media(max-width:700px){.bank-thermometer{padding:14px}.bank-thermometer-grid{max-height:380px;grid-template-columns:1fr}}
 
 .bank-thermometer-inactive.subject-inactive{background:#f1f5f9;color:#475569}
+.bank-thermometer-subject.subject-inactive{border-color:#fdba74;background:linear-gradient(145deg,#fff7ed 0%,#fffbf5 58%,#f8fafc 100%);box-shadow:0 3px 12px rgba(180,83,9,.08)}
+.bank-thermometer-subject.subject-inactive:before{background:linear-gradient(90deg,#c2410c,#fdba74)}
+.bank-thermometer-subject.subject-inactive .bank-thermometer-subject-head{border-bottom-color:#fed7aa}
+.bank-thermometer-subject.subject-inactive .bank-thermometer-subject-head h3{color:#7c2d12}
+.bank-thermometer-subject.subject-inactive .bank-thermometer-subject-head small{background:#ffedd5;color:#9a3412}
+.bank-thermometer-subject.subject-inactive .bank-thermometer-track{background:#f1e9df}
 
 /* Keep option labels and mixed Persian/Latin answer text in independent bidi runs. */
 .option{flex-direction:row;align-items:flex-start;text-align:right}

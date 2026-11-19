@@ -43,7 +43,7 @@ foreach ($bankThermometerGroups as $group) {
         <?php else: ?>
             <div class="bank-thermometer-grid">
                 <?php foreach ($bankThermometerGroups as $subjectGroup): ?>
-                    <article class="bank-thermometer-subject">
+                    <article class="bank-thermometer-subject<?= isset($subjectGroup['subject_active']) && !(int)$subjectGroup['subject_active'] ? ' subject-inactive' : '' ?>">
                         <div class="bank-thermometer-subject-head">
                             <div><h3><?= e($subjectGroup['title']) ?></h3><small><?= number_format((int)$subjectGroup['total']) ?> سؤال</small></div>
                             <?php if (isset($subjectGroup['subject_active']) && !(int)$subjectGroup['subject_active']): ?><span class="bank-thermometer-inactive subject-inactive">درس غیرفعال</span><?php endif; ?>
