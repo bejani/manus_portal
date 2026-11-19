@@ -423,7 +423,7 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 @media(max-width:700px){.bank-thermometer{padding:14px}.bank-thermometer-grid{max-height:380px;grid-template-columns:1fr}}
 
 .bank-thermometer-inactive.subject-inactive{background:#f1f5f9;color:#475569}
-.bank-thermometer-subject.subject-inactive{border:2px solid #fb923c;border-right:6px solid #c2410c;background:linear-gradient(145deg,#ffedd5 0%,#fff1df 62%,#fef3c7 100%);box-shadow:0 5px 16px rgba(154,52,18,.14)}
+.bank-thermometer-subject.subject-inactive{border:2px solid #fb923c;border-right:6px solid #c2410c;background:linear-gradient(145deg,#ffe4c2 0%,#ffefd7 62%,#ffefbd 100%);box-shadow:0 5px 16px rgba(154,52,18,.14)}
 .bank-thermometer-subject.subject-inactive:before{background:#c2410c}
 .bank-thermometer-subject.subject-inactive .bank-thermometer-subject-head{border-bottom-color:#fdba74}
 .bank-thermometer-subject.subject-inactive .bank-thermometer-subject-head h3{color:#7c2d12}
