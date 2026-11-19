@@ -154,3 +154,33 @@
         }, 6500);
     });
 })();
+
+
+(function () {
+    'use strict';
+    var classSelect = document.getElementById('analytics-class');
+    var subjectSelect = document.getElementById('analytics-subject');
+    var examSelect = document.getElementById('analytics-exam');
+    if (!classSelect || !subjectSelect || !examSelect) return;
+
+    function filterExamOptions(clearInvalidSelection) {
+        var classId = classSelect.value;
+        var subjectId = subjectSelect.value;
+        Array.prototype.forEach.call(examSelect.options, function (option) {
+            if (!option.value || option.value === '0') {
+                option.hidden = false;
+                option.disabled = false;
+                return;
+            }
+            var matches = (!classId || classId === '0' || option.dataset.classId === classId) &&
+                (!subjectId || subjectId === '0' || option.dataset.subjectId === subjectId);
+            option.hidden = !matches;
+            option.disabled = !matches;
+            if (clearInvalidSelection && !matches && option.selected) examSelect.value = '0';
+        });
+    }
+
+    classSelect.addEventListener('change', function () { filterExamOptions(true); });
+    subjectSelect.addEventListener('change', function () { filterExamOptions(true); });
+    filterExamOptions(false);
+})();

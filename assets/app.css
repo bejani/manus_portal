@@ -709,3 +709,17 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 @keyframes portalBackdropIn{from{opacity:0}to{opacity:1}}
 @media(max-width:560px){.flash-stack{inset-block-start:10px;inset-inline-end:10px;width:calc(100vw - 20px)}.flash-alert{grid-template-columns:34px minmax(0,1fr) 28px;padding:11px}.flash-alert-icon{width:33px;height:33px}.portal-dialog{width:calc(100vw - 22px)}.portal-dialog-card{padding:24px 18px 19px;border-radius:20px}.portal-dialog h2{font-size:1.1rem}.portal-dialog-actions{flex-direction:column-reverse}.portal-dialog-actions button{width:100%}}
 @media(prefers-reduced-motion:reduce){.flash-alert,.portal-dialog-card,.portal-dialog::backdrop{animation:none}.flash-alert-leaving{transition:none}.portal-dialog-actions button{transition:none}}
+
+
+/* Compact, responsive report filters. */
+.analytics-filter-panel{padding:18px 20px;background:linear-gradient(135deg,#fff,#f7f8ff);border-color:#e1e7f2}
+.analytics-filter-panel .section-heading{margin-bottom:14px}
+.analytics-filters{display:grid;grid-template-columns:repeat(4,minmax(150px,1fr)) auto;gap:12px;align-items:end}
+.analytics-filters .form-group{min-width:0;margin:0}
+.analytics-filters label{display:block;margin-bottom:6px;color:#475569;font-size:.78rem;font-weight:800}
+.analytics-filters select{min-height:42px}
+.analytics-filter-actions{display:flex;align-items:end}
+.analytics-filter-actions .btn{min-height:42px;white-space:nowrap}
+@media(max-width:1100px){.analytics-filters{grid-template-columns:repeat(3,minmax(150px,1fr))}.analytics-filter-actions{grid-column:1/-1}}
+@media(max-width:700px){.analytics-filter-panel{padding:15px}.analytics-filters{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.analytics-filter-actions{grid-column:1/-1}.analytics-filter-actions .btn{width:100%}}
+@media(max-width:460px){.analytics-filters{grid-template-columns:1fr}}
