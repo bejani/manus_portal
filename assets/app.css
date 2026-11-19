@@ -657,3 +657,55 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .bank-thermometer-description{margin:0 0 8px;font-size:.76rem}
 @media(max-width:700px){.bank-thermometer-toggle{align-items:flex-start;flex-wrap:wrap}.bank-thermometer-toggle-side{width:100%;justify-content:space-between}.bank-thermometer-title{font-size:1.05rem}}
 @media(prefers-reduced-motion:reduce){.bank-thermometer-toggle-action,.bank-thermometer-chevron{transition:none}}
+
+
+/* Unified Persian notifications and confirmation dialogs. */
+.alert{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1px solid #dbe4f0;border-radius:14px;margin:0 0 16px;background:#f8fafc;color:#334155;box-shadow:0 6px 18px rgba(30,41,59,.06);line-height:1.8}
+.alert.success{border-color:#a7f3d0;background:linear-gradient(120deg,#ecfdf5,#f0fdfa);color:#065f46}
+.alert.danger{border-color:#fecaca;background:linear-gradient(120deg,#fff1f2,#fff7ed);color:#991b1b}
+.alert.warning{border-color:#fed7aa;background:linear-gradient(120deg,#fff7ed,#fffbeb);color:#9a3412}
+.alert.info{border-color:#bae6fd;background:linear-gradient(120deg,#eff6ff,#ecfeff);color:#075985}
+.alert ul{margin:0;padding-inline-start:20px}
+.flash-stack{position:fixed;z-index:10050;inset-block-start:16px;inset-inline-end:16px;display:grid;gap:10px;width:min(480px,calc(100vw - 32px));pointer-events:none}
+.flash-alert{display:grid;grid-template-columns:38px minmax(0,1fr) 30px;align-items:start;gap:11px;padding:13px 14px;border-inline-start:5px solid #0f766e;pointer-events:auto;animation:flashAlertEnter .22s ease-out}
+.flash-alert.success{border-inline-start-color:#059669}
+.flash-alert.danger{border-inline-start-color:#dc2626}
+.flash-alert.warning{border-inline-start-color:#ea580c}
+.flash-alert.info{border-inline-start-color:#0284c7}
+.flash-alert-icon{display:grid;width:36px;height:36px;place-items:center;border-radius:12px;background:#d1fae5;color:#047857;font-size:1.05rem;font-weight:900}
+.flash-alert.danger .flash-alert-icon{background:#fee2e2;color:#b91c1c}
+.flash-alert.warning .flash-alert-icon{background:#ffedd5;color:#c2410c}
+.flash-alert.info .flash-alert-icon{background:#e0f2fe;color:#0369a1}
+.flash-alert-copy{min-width:0}
+.flash-alert-copy strong{display:block;margin-bottom:2px;font-size:.83rem;font-weight:900}
+.flash-alert-copy p{margin:0;font-size:.79rem;line-height:1.75;overflow-wrap:anywhere}
+.flash-alert-close{display:grid;width:28px;height:28px;place-items:center;border:0;border-radius:8px;background:transparent;color:inherit;cursor:pointer;font:inherit;font-size:1.1rem}
+.flash-alert-close:hover{background:rgba(15,23,42,.07)}
+.flash-alert-leaving{opacity:0;transform:translateY(-6px);transition:opacity .22s ease,transform .22s ease}
+@keyframes flashAlertEnter{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.portal-dialog{width:min(500px,calc(100vw - 28px));max-width:none;max-height:min(90vh,760px);padding:0;border:1px solid rgba(255,255,255,.9);border-radius:24px;background:transparent;color:#1e293b;overflow:visible}
+.portal-dialog::backdrop{background:rgba(15,23,42,.58);backdrop-filter:blur(5px);animation:portalBackdropIn .18s ease-out}
+.portal-dialog-card{position:relative;display:flex;flex-direction:column;align-items:center;padding:30px 28px 24px;border:1px solid #e2e8f0;border-radius:24px;background:radial-gradient(circle at 50% 0,rgba(224,231,255,.7),transparent 42%),linear-gradient(145deg,#fff 0%,#fafaff 65%,#eff6ff 100%);box-shadow:0 28px 85px rgba(15,23,42,.3);text-align:center;animation:portalDialogRise .22s cubic-bezier(.2,.8,.2,1)}
+.portal-dialog-icon{display:grid;width:58px;height:58px;place-items:center;border:1px solid #c4b5fd;border-radius:19px;background:linear-gradient(145deg,#ede9fe,#e0f2fe);color:#5b21b6;font-size:1.55rem;font-weight:900;box-shadow:0 8px 22px rgba(91,33,182,.13)}
+.portal-dialog h2{margin:13px 0 7px;color:#25204a;font-size:1.22rem;font-weight:900}
+.portal-dialog-message{max-width:420px;margin:0;color:#596579;font-size:.9rem;line-height:1.9;white-space:pre-line}
+.portal-dialog-input-wrap{width:100%;margin-top:16px;text-align:right}
+.portal-dialog-input-wrap[hidden]{display:none}
+.portal-dialog-input-wrap label{display:block;margin-bottom:6px;color:#334155;font-size:.8rem;font-weight:800}
+.portal-dialog-input{width:100%;min-height:44px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#0f172a;font:inherit;font-size:.88rem;outline:none}
+.portal-dialog-input:focus{border-color:#8b5cf6;box-shadow:0 0 0 3px rgba(139,92,246,.14)}
+.portal-dialog-input-error{min-height:1.3em;margin:4px 0 0;color:#b91c1c;font-size:.73rem}
+.portal-dialog-actions{display:flex;justify-content:center;gap:10px;width:100%;margin-top:22px}
+.portal-dialog-actions button{min-width:120px;min-height:42px;padding:9px 16px;border:0;border-radius:11px;background:linear-gradient(135deg,#6d28d9,#7c3aed);color:#fff;cursor:pointer;font:inherit;font-size:.84rem;font-weight:800;box-shadow:0 7px 17px rgba(109,40,217,.22);transition:transform .15s ease,filter .15s ease}
+.portal-dialog-actions button:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.portal-dialog-actions [data-dialog-cancel]{border:1px solid #dbe2ec;background:#fff;color:#475569;box-shadow:none}
+.portal-dialog-danger .portal-dialog-card{border-color:#fecaca;background:radial-gradient(circle at 50% 0,rgba(254,226,226,.8),transparent 42%),linear-gradient(145deg,#fff 0%,#fff7ed 60%,#fff1f2 100%);box-shadow:0 28px 85px rgba(127,29,29,.3)}
+.portal-dialog-danger .portal-dialog-icon{border-color:#fca5a5;background:linear-gradient(145deg,#fee2e2,#ffedd5);color:#b91c1c;box-shadow:0 8px 22px rgba(220,38,38,.15)}
+.portal-dialog-danger h2{color:#7f1d1d}
+.portal-dialog-danger .portal-dialog-actions [data-dialog-accept]{background:linear-gradient(135deg,#dc2626,#ea580c);box-shadow:0 7px 17px rgba(220,38,38,.2)}
+.portal-dialog-success .portal-dialog-icon{border-color:#a7f3d0;background:linear-gradient(145deg,#d1fae5,#ccfbf1);color:#047857}
+.portal-dialog-info .portal-dialog-icon{border-color:#bae6fd;background:linear-gradient(145deg,#e0f2fe,#cffafe);color:#0369a1}
+@keyframes portalDialogRise{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes portalBackdropIn{from{opacity:0}to{opacity:1}}
+@media(max-width:560px){.flash-stack{inset-block-start:10px;inset-inline-end:10px;width:calc(100vw - 20px)}.flash-alert{grid-template-columns:34px minmax(0,1fr) 28px;padding:11px}.flash-alert-icon{width:33px;height:33px}.portal-dialog{width:calc(100vw - 22px)}.portal-dialog-card{padding:24px 18px 19px;border-radius:20px}.portal-dialog h2{font-size:1.1rem}.portal-dialog-actions{flex-direction:column-reverse}.portal-dialog-actions button{width:100%}}
+@media(prefers-reduced-motion:reduce){.flash-alert,.portal-dialog-card,.portal-dialog::backdrop{animation:none}.flash-alert-leaving{transition:none}.portal-dialog-actions button{transition:none}}

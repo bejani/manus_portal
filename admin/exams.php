@@ -233,21 +233,21 @@ require __DIR__ . '/../partials/header.php';
                     <div class="actions">
                         <?php if ($exam['archived_at']): ?>
                             <a class="btn btn-sm btn-light" href="<?= e(url('teacher/results.php?exam_id=' . $exam['id'])) ?>">سوابق و نتایج</a>
-                            <form method="post" style="display:inline" onsubmit="return confirm('آزمون از بایگانی خارج و به پیش‌نویس برگردانده شود؟')"><?= csrf_field() ?><input type="hidden" name="action" value="unarchive"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><button class="btn btn-sm btn-success">بازیابی</button></form>
+                            <form method="post" style="display:inline" data-confirm="آزمون از بایگانی خارج و به پیش‌نویس برگردانده شود؟" data-confirm-title="بازیابی آزمون" data-confirm-tone="success" data-confirm-accept="بازیابی آزمون"><?= csrf_field() ?><input type="hidden" name="action" value="unarchive"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><button class="btn btn-sm btn-success">بازیابی</button></form>
                         <?php else: ?>
                         <a class="btn btn-sm btn-primary" href="<?= e(url('teacher/exams.php?id=' . $exam['id'])) ?>">مدیریت پرسش‌ها</a>
                         <a class="btn btn-sm btn-light" href="<?= e(url('admin/exam_preview.php?id=' . $exam['id'])) ?>">پیش‌نمایش</a>
                         <a class="btn btn-sm btn-light" href="<?= e(url('teacher/results.php?exam_id=' . $exam['id'])) ?>">نتایج</a>
                         <form method="post" style="display:inline"><?= csrf_field() ?><input type="hidden" name="action" value="copy"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><button class="btn btn-sm btn-light">کپی</button></form>
                         <?php if ($exam['status'] === 'published'): ?>
-                            <form method="post" style="display:inline" onsubmit="return confirm('آزمون از دسترس دانش‌آموزان خارج و برای ویرایش به پیش‌نویس برگردانده شود؟ پاسخ‌های قبلی حذف نمی‌شوند.');"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><input type="hidden" name="status" value="draft"><button class="btn btn-sm btn-warning">بازگشت به پیش‌نویس</button></form>
+                            <form method="post" style="display:inline" data-confirm="آزمون از دسترس دانش‌آموزان خارج و برای ویرایش به پیش‌نویس برگردانده شود؟ پاسخ‌های قبلی حذف نمی‌شوند." data-confirm-title="بازگشت آزمون به پیش‌نویس" data-confirm-tone="warning" data-confirm-accept="بازگشت به پیش‌نویس"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><input type="hidden" name="status" value="draft"><button class="btn btn-sm btn-warning">بازگشت به پیش‌نویس</button></form>
                             <form method="post" style="display:inline"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><input type="hidden" name="status" value="closed"><button class="btn btn-sm btn-danger">بستن</button></form>
                         <?php elseif ($exam['status'] === 'closed'): ?>
                             <form method="post" style="display:inline"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><input type="hidden" name="status" value="draft"><button class="btn btn-sm btn-light">بازکردن</button></form>
                         <?php else: ?>
                             <form method="post" style="display:inline"><?= csrf_field() ?><input type="hidden" name="action" value="status"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><input type="hidden" name="status" value="published"><button class="btn btn-sm btn-success">انتشار</button></form>
                         <?php endif; ?>
-                        <form method="post" style="display:inline" onsubmit="return confirm('آزمون از فهرست‌های جاری و دسترس دانش‌آموز خارج شود؟ سوابق و کارنامه‌ها حذف نمی‌شوند.')"><?= csrf_field() ?><input type="hidden" name="action" value="archive"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><button class="btn btn-sm btn-light">بایگانی</button></form>
+                        <form method="post" style="display:inline" data-confirm="آزمون از فهرست‌های جاری و دسترس دانش‌آموز خارج شود؟ سوابق و کارنامه‌ها حذف نمی‌شوند." data-confirm-title="بایگانی آزمون" data-confirm-tone="warning" data-confirm-accept="بله، بایگانی شود"><?= csrf_field() ?><input type="hidden" name="action" value="archive"><input type="hidden" name="id" value="<?= (int)$exam['id'] ?>"><button class="btn btn-sm btn-light">بایگانی</button></form>
                         <?php endif; ?>
                     </div>
                 </td>

@@ -50,5 +50,26 @@ $adminNav = [
     <?php endif; ?>
 </header>
 <main class="container page-content">
-    <?php if ($msg = flash('success')): ?><div class="alert success"><?= e($msg) ?></div><?php endif; ?>
-    <?php if ($msg = flash('error')): ?><div class="alert danger"><?= e($msg) ?></div><?php endif; ?>
+    <?php
+    $flashDefinitions = [
+        'success' => ['title' => 'با موفقیت انجام شد', 'icon' => '✓', 'role' => 'status', 'autoHide' => true],
+        'error' => ['title' => 'انجام عملیات ممکن نشد', 'icon' => '!', 'role' => 'alert', 'autoHide' => false],
+        'warning' => ['title' => 'نیاز به توجه', 'icon' => '!', 'role' => 'alert', 'autoHide' => false],
+        'info' => ['title' => 'اطلاع‌رسانی', 'icon' => 'i', 'role' => 'status', 'autoHide' => true],
+    ];
+    $flashMessages = [];
+    foreach ($flashDefinitions as $flashType => $flashMeta) {
+        if ($flashText = flash($flashType)) $flashMessages[] = ['type' => $flashType, 'text' => $flashText] + $flashMeta;
+    }
+    ?>
+    <?php if ($flashMessages): ?>
+        <div class="flash-stack" aria-label="پیام‌های سامانه">
+            <?php foreach ($flashMessages as $flashItem): ?>
+                <div class="alert flash-alert <?= $flashItem['type'] === 'error' ? 'danger' : e($flashItem['type']) ?>" role="<?= e($flashItem['role']) ?>"<?= $flashItem['autoHide'] ? ' data-autohide="true"' : '' ?>>
+                    <span class="flash-alert-icon" aria-hidden="true"><?= e($flashItem['icon']) ?></span>
+                    <div class="flash-alert-copy"><strong><?= e($flashItem['title']) ?></strong><p><?= e($flashItem['text']) ?></p></div>
+                    <button type="button" class="flash-alert-close" data-dismiss-alert aria-label="بستن پیام">×</button>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
