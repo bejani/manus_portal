@@ -53,11 +53,20 @@ foreach ($bankThermometerGroups as $group) {
                 ['title' => 'دروس غیرفعال', 'groups' => $thermometerInactiveGroups, 'class' => 'inactive'],
             ] as $subjectSection): ?>
                 <?php if (!$subjectSection['groups']) continue; ?>
-                <section class="bank-thermometer-section bank-thermometer-section-<?= e($subjectSection['class']) ?>" aria-label="<?= e($subjectSection['title']) ?>">
+                <?php if ($subjectSection['class'] === 'inactive'): ?>
+                    <details class="bank-thermometer-section bank-thermometer-section-inactive">
+                    <summary class="bank-thermometer-section-head">
+                        <h3><?= e($subjectSection['title']) ?></h3>
+                        <span><?= number_format(count($subjectSection['groups'])) ?> درس</span>
+                        <span class="bank-thermometer-section-icon" aria-hidden="true"></span>
+                    </summary>
+                <?php else: ?>
+                    <section class="bank-thermometer-section bank-thermometer-section-active" aria-label="<?= e($subjectSection['title']) ?>">
                     <div class="bank-thermometer-section-head">
                         <h3><?= e($subjectSection['title']) ?></h3>
                         <span><?= number_format(count($subjectSection['groups'])) ?> درس</span>
                     </div>
+                <?php endif; ?>
                     <div class="bank-thermometer-grid">
                         <?php foreach ($subjectSection['groups'] as $subjectGroup): ?>
                             <article class="bank-thermometer-subject<?= isset($subjectGroup['subject_active']) && !(int)$subjectGroup['subject_active'] ? ' subject-inactive' : '' ?>">
@@ -104,7 +113,11 @@ foreach ($bankThermometerGroups as $group) {
                             </article>
                         <?php endforeach; ?>
                     </div>
-                </section>
+                <?php if ($subjectSection['class'] === 'inactive'): ?>
+                    </details>
+                <?php else: ?>
+                    </section>
+                <?php endif; ?>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>

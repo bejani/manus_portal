@@ -448,6 +448,12 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .bank-thermometer-section-inactive .bank-thermometer-section-head{border-color:#fdba74;background:#fff1df}
 .bank-thermometer-section-inactive .bank-thermometer-section-head h3,.bank-thermometer-section-inactive .bank-thermometer-section-head>span{color:#9a3412}
 .bank-thermometer-section-inactive .bank-thermometer-section-head>span{background:#fed7aa}
+.bank-thermometer-section-inactive>summary{cursor:pointer;list-style:none}
+.bank-thermometer-section-inactive>summary::-webkit-details-marker{display:none}
+.bank-thermometer-section-inactive>summary:focus-visible{outline:2px solid #c2410c;outline-offset:2px}
+.bank-thermometer-section-icon{display:grid;width:23px;height:23px;place-items:center;border-radius:50%;background:#c2410c!important;color:#fff!important;font-size:1rem;line-height:1}
+.bank-thermometer-section-icon:before{content:"+"}
+.bank-thermometer-section-inactive[open]>.bank-thermometer-section-head .bank-thermometer-section-icon:before{content:"−"}
 .bank-thermometer-section .bank-thermometer-grid{max-height:360px}
 
 /* Keep option labels and mixed Persian/Latin answer text in independent bidi runs. */
