@@ -71,6 +71,14 @@ foreach ($bankThermometerGroups as $group) {
                                     <span class="thermo-level-medium">متوسط <b><?= number_format((int)($subjectGroup['medium'] ?? 0)) ?></b></span>
                                     <span class="thermo-level-hard">عمیق <b><?= number_format((int)($subjectGroup['hard'] ?? 0)) ?></b></span>
                                 </div>
+                                <?php $subjectChapterCount = count(array_filter($subjectGroup['chapters'], static fn($chapter) => (int)$chapter['total'] > 0)); ?>
+                                <details class="bank-thermometer-chapter-toggle">
+                                    <summary class="bank-thermometer-chapter-toggle-summary">
+                                        <span>نمایش پودمان‌ها / فصل‌ها</span>
+                                        <span class="bank-thermometer-chapter-toggle-count"><?= number_format($subjectChapterCount) ?></span>
+                                        <span class="bank-thermometer-chapter-toggle-icon" aria-hidden="true"></span>
+                                    </summary>
+                                    <div class="bank-thermometer-chapter-toggle-content">
                                 <?php if ($subjectGroup['total'] > 0): ?>
                                     <?php $maxChapterCount = max(array_map(static fn($chapter) => (int)$chapter['total'], $subjectGroup['chapters'])); ?>
                                     <div class="bank-thermometer-chapters">
@@ -91,6 +99,8 @@ foreach ($bankThermometerGroups as $group) {
                                 <?php else: ?>
                                     <div class="bank-thermometer-empty subject-empty">هنوز سؤالی در این درس ثبت نشده است.</div>
                                 <?php endif; ?>
+                                    </div>
+                                </details>
                             </article>
                         <?php endforeach; ?>
                     </div>
