@@ -83,21 +83,25 @@
     document.addEventListener('submit', async function (event) {
         var form = event.target;
         if (!(form instanceof HTMLFormElement)) return;
+        var submitter = event.submitter || null;
+        function formOption(name) {
+            return form.dataset[name] || (submitter && submitter.dataset[name]) || '';
+        }
         if (form.dataset.portalUiBypass === '1') {
             delete form.dataset.portalUiBypass;
             return;
         }
 
-        var promptText = form.dataset.prompt;
-        var confirmText = form.dataset.confirm;
+        var promptText = formOption('prompt');
+        var confirmText = formOption('confirm');
         var selectionCount = null;
-        var selectionSelector = form.dataset.confirmSelection;
+        var selectionSelector = formOption('confirmSelection');
         if (selectionSelector) {
             try { selectionCount = document.querySelectorAll(selectionSelector).length; }
             catch (error) { selectionCount = 0; }
             if (!selectionCount) {
                 event.preventDefault();
-                await showAlert(form.dataset.emptyMessage || 'ابتدا دست‌کم یک مورد را انتخاب کنید.', 'warning');
+                await showAlert(formOption('emptyMessage') || 'ابتدا دست‌کم یک مورد را انتخاب کنید.', 'warning');
                 return;
             }
         }
@@ -107,25 +111,25 @@
         if (promptText) {
             var promptValue = await showDialog({
                 kind: 'prompt', tone: 'warning',
-                title: form.dataset.promptTitle || 'تکمیل اطلاعات',
+                title: formOption('promptTitle') || 'تکمیل اطلاعات',
                 message: promptText,
-                placeholder: form.dataset.promptPlaceholder || '',
-                required: form.dataset.promptRequired !== 'false',
-                maxLength: Number(form.dataset.promptMaxlength || 500)
+                placeholder: formOption('promptPlaceholder'),
+                required: formOption('promptRequired') !== 'false',
+                maxLength: Number(formOption('promptMaxlength') || 500)
             });
             if (promptValue === null) return;
-            var promptTarget = form.querySelector('[name="' + (form.dataset.promptTarget || 'reason') + '"]');
+            var promptTarget = form.querySelector('[name="' + (formOption('promptTarget') || 'reason') + '"]');
             if (promptTarget) promptTarget.value = promptValue;
         }
         if (confirmText) {
             var formattedMessage = confirmText.replace(/\{count\}/g, String(selectionCount === null ? '' : selectionCount));
             var accepted = await showConfirm({
                 kind: 'confirm',
-                tone: form.dataset.confirmTone || 'warning',
-                title: form.dataset.confirmTitle || (form.dataset.confirmTone === 'danger' ? 'تأیید حذف' : 'تأیید عملیات'),
+                tone: formOption('confirmTone') || 'warning',
+                title: formOption('confirmTitle') || (formOption('confirmTone') === 'danger' ? 'تأیید حذف' : 'تأیید عملیات'),
                 message: formattedMessage,
-                acceptText: form.dataset.confirmAccept || 'تأیید و ادامه',
-                cancelText: form.dataset.confirmCancel || 'انصراف'
+                acceptText: formOption('confirmAccept') || 'تأیید و ادامه',
+                cancelText: formOption('confirmCancel') || 'انصراف'
             });
             if (!accepted) return;
         }
