@@ -430,6 +430,14 @@ body.page-exams .page-content>.card{border-color:#d3c5ff;box-shadow:0 12px 30px 
 .bank-thermometer-subject.subject-inactive .bank-thermometer-subject-head small{background:#fed7aa;color:#7c2d12}
 .bank-thermometer-subject.subject-inactive .bank-thermometer-inactive.subject-inactive{border:1px solid #ea580c;background:#c2410c;color:#fff;font-size:.68rem}
 .bank-thermometer-subject.subject-inactive .bank-thermometer-track{background:#f1e9df}
+.bank-thermometer-section{margin-top:14px}
+.bank-thermometer-section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px;padding:7px 10px;border:1px solid #d1fae5;border-radius:10px;background:#ecfdf5}
+.bank-thermometer-section-head h3{margin:0;color:#047857;font-size:.84rem;font-weight:900}
+.bank-thermometer-section-head>span{padding:2px 8px;border-radius:999px;background:#d1fae5;color:#047857;font-size:.7rem;font-weight:800}
+.bank-thermometer-section-inactive .bank-thermometer-section-head{border-color:#fdba74;background:#fff1df}
+.bank-thermometer-section-inactive .bank-thermometer-section-head h3,.bank-thermometer-section-inactive .bank-thermometer-section-head>span{color:#9a3412}
+.bank-thermometer-section-inactive .bank-thermometer-section-head>span{background:#fed7aa}
+.bank-thermometer-section .bank-thermometer-grid{max-height:360px}
 
 /* Keep option labels and mixed Persian/Latin answer text in independent bidi runs. */
 .option{flex-direction:row;align-items:flex-start;text-align:right}

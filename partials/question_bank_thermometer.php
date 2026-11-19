@@ -4,6 +4,8 @@ $thermometerQuestions = 0;
 $thermometerSubjects = count($bankThermometerGroups);
 $thermometerChapters = 0;
 $thermometerDifficulty = ['easy' => 0, 'medium' => 0, 'hard' => 0];
+$thermometerActiveGroups = [];
+$thermometerInactiveGroups = [];
 foreach ($bankThermometerGroups as $group) {
     $thermometerQuestions += (int)$group['total'];
     foreach (['easy', 'medium', 'hard'] as $level) {
@@ -11,6 +13,11 @@ foreach ($bankThermometerGroups as $group) {
     }
     foreach ($group['chapters'] as $chapter) {
         if ((int)$chapter['total'] > 0) $thermometerChapters++;
+    }
+    if (isset($group['subject_active']) && !(int)$group['subject_active']) {
+        $thermometerInactiveGroups[] = $group;
+    } else {
+        $thermometerActiveGroups[] = $group;
     }
 }
 ?>
@@ -41,42 +48,54 @@ foreach ($bankThermometerGroups as $group) {
         <?php if (!$bankThermometerGroups): ?>
             <div class="bank-thermometer-empty">برای نمایش آمار، ابتدا یک درس و سؤال در بانک ثبت کنید.</div>
         <?php else: ?>
-            <div class="bank-thermometer-grid">
-                <?php foreach ($bankThermometerGroups as $subjectGroup): ?>
-                    <article class="bank-thermometer-subject<?= isset($subjectGroup['subject_active']) && !(int)$subjectGroup['subject_active'] ? ' subject-inactive' : '' ?>">
-                        <div class="bank-thermometer-subject-head">
-                            <div><h3><?= e($subjectGroup['title']) ?></h3><small><?= number_format((int)$subjectGroup['total']) ?> سؤال</small></div>
-                            <?php if (isset($subjectGroup['subject_active']) && !(int)$subjectGroup['subject_active']): ?><span class="bank-thermometer-inactive subject-inactive">درس غیرفعال</span><?php endif; ?>
-                            <?php if ($subjectGroup['inactive'] > 0): ?><span class="bank-thermometer-inactive"><?= number_format((int)$subjectGroup['inactive']) ?> غیرفعال</span><?php endif; ?>
-                        </div>
-                        <div class="bank-thermometer-level-counts subject-level-counts" aria-label="تعداد سؤال‌ها در درس <?= e($subjectGroup['title']) ?> برحسب سطح دشواری">
-                            <span class="thermo-level-easy">آسان <b><?= number_format((int)($subjectGroup['easy'] ?? 0)) ?></b></span>
-                            <span class="thermo-level-medium">متوسط <b><?= number_format((int)($subjectGroup['medium'] ?? 0)) ?></b></span>
-                            <span class="thermo-level-hard">عمیق <b><?= number_format((int)($subjectGroup['hard'] ?? 0)) ?></b></span>
-                        </div>
-                        <?php if ($subjectGroup['total'] > 0): ?>
-                            <?php $maxChapterCount = max(array_map(static fn($chapter) => (int)$chapter['total'], $subjectGroup['chapters'])); ?>
-                            <div class="bank-thermometer-chapters">
-                                <?php foreach ($subjectGroup['chapters'] as $chapter): ?>
-                                    <?php $width = $maxChapterCount > 0 ? max(5, (int)round((int)$chapter['total'] / $maxChapterCount * 100)) : 0; ?>
-                                    <div class="bank-thermometer-row">
-                                        <div class="bank-thermometer-label"><span title="<?= e($chapter['title']) ?>"><?= e($chapter['title']) ?></span><strong><?= number_format((int)$chapter['total']) ?></strong></div>
-                                        <div class="bank-thermometer-track" role="img" aria-label="<?= e($chapter['title']) ?>: <?= number_format((int)$chapter['total']) ?> سؤال"><span style="width:<?= $width ?>%"></span></div>
-                                        <div class="bank-thermometer-level-counts chapter-level-counts" aria-label="تعداد سؤال‌های <?= e($chapter['title']) ?> برحسب سطح دشواری">
-                                            <span class="thermo-level-easy">آسان <b><?= number_format((int)($chapter['easy'] ?? 0)) ?></b></span>
-                                            <span class="thermo-level-medium">متوسط <b><?= number_format((int)($chapter['medium'] ?? 0)) ?></b></span>
-                                            <span class="thermo-level-hard">عمیق <b><?= number_format((int)($chapter['hard'] ?? 0)) ?></b></span>
-                                        </div>
-                                        <?php if ($chapter['inactive'] > 0): ?><small class="bank-thermometer-chapter-inactive"><?= number_format((int)$chapter['inactive']) ?> غیرفعال از <?= number_format((int)$chapter['total']) ?></small><?php endif; ?>
+            <?php foreach ([
+                ['title' => 'دروس فعال', 'groups' => $thermometerActiveGroups, 'class' => 'active'],
+                ['title' => 'دروس غیرفعال', 'groups' => $thermometerInactiveGroups, 'class' => 'inactive'],
+            ] as $subjectSection): ?>
+                <?php if (!$subjectSection['groups']) continue; ?>
+                <section class="bank-thermometer-section bank-thermometer-section-<?= e($subjectSection['class']) ?>" aria-label="<?= e($subjectSection['title']) ?>">
+                    <div class="bank-thermometer-section-head">
+                        <h3><?= e($subjectSection['title']) ?></h3>
+                        <span><?= number_format(count($subjectSection['groups'])) ?> درس</span>
+                    </div>
+                    <div class="bank-thermometer-grid">
+                        <?php foreach ($subjectSection['groups'] as $subjectGroup): ?>
+                            <article class="bank-thermometer-subject<?= isset($subjectGroup['subject_active']) && !(int)$subjectGroup['subject_active'] ? ' subject-inactive' : '' ?>">
+                                <div class="bank-thermometer-subject-head">
+                                    <div><h3><?= e($subjectGroup['title']) ?></h3><small><?= number_format((int)$subjectGroup['total']) ?> سؤال</small></div>
+                                    <?php if (isset($subjectGroup['subject_active']) && !(int)$subjectGroup['subject_active']): ?><span class="bank-thermometer-inactive subject-inactive">درس غیرفعال</span><?php endif; ?>
+                                    <?php if ($subjectGroup['inactive'] > 0): ?><span class="bank-thermometer-inactive"><?= number_format((int)$subjectGroup['inactive']) ?> غیرفعال</span><?php endif; ?>
+                                </div>
+                                <div class="bank-thermometer-level-counts subject-level-counts" aria-label="تعداد سؤال‌ها در درس <?= e($subjectGroup['title']) ?> برحسب سطح دشواری">
+                                    <span class="thermo-level-easy">آسان <b><?= number_format((int)($subjectGroup['easy'] ?? 0)) ?></b></span>
+                                    <span class="thermo-level-medium">متوسط <b><?= number_format((int)($subjectGroup['medium'] ?? 0)) ?></b></span>
+                                    <span class="thermo-level-hard">عمیق <b><?= number_format((int)($subjectGroup['hard'] ?? 0)) ?></b></span>
+                                </div>
+                                <?php if ($subjectGroup['total'] > 0): ?>
+                                    <?php $maxChapterCount = max(array_map(static fn($chapter) => (int)$chapter['total'], $subjectGroup['chapters'])); ?>
+                                    <div class="bank-thermometer-chapters">
+                                        <?php foreach ($subjectGroup['chapters'] as $chapter): ?>
+                                            <?php $width = $maxChapterCount > 0 ? max(5, (int)round((int)$chapter['total'] / $maxChapterCount * 100)) : 0; ?>
+                                            <div class="bank-thermometer-row">
+                                                <div class="bank-thermometer-label"><span title="<?= e($chapter['title']) ?>"><?= e($chapter['title']) ?></span><strong><?= number_format((int)$chapter['total']) ?></strong></div>
+                                                <div class="bank-thermometer-track" role="img" aria-label="<?= e($chapter['title']) ?>: <?= number_format((int)$chapter['total']) ?> سؤال"><span style="width:<?= $width ?>%"></span></div>
+                                                <div class="bank-thermometer-level-counts chapter-level-counts" aria-label="تعداد سؤال‌های <?= e($chapter['title']) ?> برحسب سطح دشواری">
+                                                    <span class="thermo-level-easy">آسان <b><?= number_format((int)($chapter['easy'] ?? 0)) ?></b></span>
+                                                    <span class="thermo-level-medium">متوسط <b><?= number_format((int)($chapter['medium'] ?? 0)) ?></b></span>
+                                                    <span class="thermo-level-hard">عمیق <b><?= number_format((int)($chapter['hard'] ?? 0)) ?></b></span>
+                                                </div>
+                                                <?php if ($chapter['inactive'] > 0): ?><small class="bank-thermometer-chapter-inactive"><?= number_format((int)$chapter['inactive']) ?> غیرفعال از <?= number_format((int)$chapter['total']) ?></small><?php endif; ?>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php else: ?>
-                            <div class="bank-thermometer-empty subject-empty">هنوز سؤالی در این درس ثبت نشده است.</div>
-                        <?php endif; ?>
-                    </article>
-                <?php endforeach; ?>
-            </div>
+                                <?php else: ?>
+                                    <div class="bank-thermometer-empty subject-empty">هنوز سؤالی در این درس ثبت نشده است.</div>
+                                <?php endif; ?>
+                            </article>
+                        <?php endforeach; ?>
+                    </div>
+                </section>
+            <?php endforeach; ?>
         <?php endif; ?>
     </div>
 </details>
